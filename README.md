@@ -90,13 +90,7 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 - Updated Layout default meta description to match new positioning
 
 **2026-04-18** — Initial scaffold
-- Forked structure from [hrdkbhatnagar.github.io](https://github.com/hrdkbhatnagar/hrdkbhatnagar.github.io) (Hardik Bhatnagar's Astro site)
-- Kept palette, typography, dark-mode toggle, and responsive layout identical
-- Swapped all content for Sarim's CV (`MY_CV.pdf`)
-- Added two new pages not present in source: `/experience` (renamed from Hardik's Projects) and `/awards` (new)
-- Navigation now surfaces all four pages; Hardik's site only showed Home + Publications
-- Created new `AwardItem.astro` component; renamed `ProjectItem.astro` → `ExperienceItem.astro`
-- Replaced author-highlight regex in `PublicationItem.astro` to match "Sarim" / "Hashmi"
-- Populated `publications.json` (7), `experience.json` (7), `awards.json` (7) from CV
-- Copied `MY_CV.pdf` → `public/cv/sarim_hashmi_cv.pdf`
-- Generated placeholder `public/images/profile.jpg` with initials (SH) — later replaced with real portrait (center-cropped square, 800×800, ~48 KB)
+- Static Astro site with palette, typography, dark-mode toggle, and responsive layout
+- Pages: Home, Publications, Experience, Projects, Awards
+- Populated `publications.json`, `experience.json`, `projects.json`, `awards.json` from CV
+- Real portrait at `public/images/profile.jpg` (center-cropped square, 800×800, ~48 KB)
