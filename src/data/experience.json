@@ -1,0 +1,78 @@
+[
+  {
+    "title": "Research Engineer — Conversational Agent (Etihad Airways)",
+    "description": [
+      "Built ingestion/cleaning pipelines for Adobe and NICE; extracted personas and planned journeys; unified these into a single retrieval layer for the agent.",
+      "Designed structured response schemas (single/multi-flight) with “flight transparency,” and extended planning/LLM logic to support all flight options on request.",
+      "Implemented real-time audio capability for the Etihad chatbot using ChatGPT's streaming API, enabling full-duplex voice interactions.",
+      "Integrated critical APIs (incl. return-journey), enabled targeted supervised fine-tuning, parallelized conversational state for latency, and added bi-directional audio with the same policies.",
+      "Designed and simulated a UserLM to emulate user behavior patterns, supporting training, evaluation, and stress-testing of the conversational system."
+    ],
+    "date": "Jul 2025 — Present",
+    "institution": "MBZUAI · Supervisor: Dr. Nils Lukas",
+    "tags": ["LLMs", "Retrieval", "Conversational AI", "Streaming Audio", "Fine-Tuning"],
+    "link": null
+  },
+  {
+    "title": "AdvSim2Real — Adversarial Simulation for Agent Systems",
+    "description": [
+      "Strengthening LLM-agent pipelines against realistic failure modes through dynamic adversarial simulation.",
+      "Probing retrieval, memory, tool use, and multi-turn behavior under pressure to surface failure modes that do not appear in static evaluation."
+    ],
+    "date": "Ongoing",
+    "institution": "MBZUAI · Supervisor: Dr. Nils Lukas",
+    "tags": ["Agent Security", "Adversarial Robustness", "LLM Agents"],
+    "link": null
+  },
+  {
+    "title": "UGRIP Mentor — BraTS MICCAI Challenge",
+    "description": [
+      "Mentored 6 UGRIP interns and actively participated in the BraTS MICCAI challenge.",
+      "Enhanced the MedNeXt base model for BraTS 2023 by integrating a novel schedule-free optimizer introduced by Meta AI in the paper “The Road Less Scheduled”.",
+      "Implemented both greedy and uniform model souping techniques across 18 trained models with varied hyper-parameters to boost performance.",
+      "Awarded the Best Team Award within the UGRIP program.",
+      "Achieved 3rd place in MICCAI's prestigious BraTS 2024 SSA & Pediatrics Challenge and presented our research at MICCAI 2024."
+    ],
+    "date": "Jun — Jul 2024",
+    "institution": "MBZUAI · Supervisor: Dr. Mohammad Yaqub",
+    "tags": ["Medical Imaging", "Brain Tumor Segmentation", "MedNeXt", "Model Souping"],
+    "link": null
+  },
+  {
+    "title": "Machine Learning Engineer",
+    "description": [
+      "Developed a Retrieval-Augmented Generation (RAG) chatbot system that processes Excel datasets to deliver comprehensive data explanations, interactive QA responses, and actionable analytics insights.",
+      "Handled different meetings' requirements and goals with stakeholders."
+    ],
+    "date": "May — Jul 2024",
+    "institution": "Etisalat · Supervisor: Ahmed Hamada",
+    "tags": ["RAG", "NLP", "Analytics"],
+    "link": null
+  },
+  {
+    "title": "Research Intern — Autonomous Last-Mile Vehicle",
+    "description": [
+      "Developed a Drive-by-Wire system for an E-rickshaw, enhancing autonomous control capabilities.",
+      "Calibrated VLP-16 LiDAR and stereo cameras to improve sensor accuracy and reliability.",
+      "Utilized Commonroad Scenario Designer to create lanelet maps for IIIT Delhi OSM map and Carla open drive maps — [documentation](https://hackmd.io/9IH3-cV1T5it9JmIgcOSLw).",
+      "Implemented a PID controller for throttle and steering control of the E-rickshaw, ensuring smooth and responsive maneuvers.",
+      "Trained and deployed YOLOP for real-time object detection and perception tasks — [video](https://www.youtube.com/watch?v=MVEGYVS_Tus)."
+    ],
+    "date": "Mar 2022 — May 2023",
+    "institution": "IIITD · Supervisor: Dr. Saket Anand",
+    "tags": ["Robotics", "Autonomous Driving", "LiDAR", "YOLOP", "Sensor Fusion"],
+    "link": null
+  },
+  {
+    "title": "Research Intern — Linear Friction Actuation",
+    "description": [
+      "Worked on Linear Friction Actuation to enhance mechanical system performance.",
+      "Designed an image-processing application to analyze photos of friction stir-processed material samples, extracting valuable data for research purposes.",
+      "Automated linear rails using a ball screw, stepper motor, Arduino Uno, and TB6600 motor driver for precise control of a welding torch."
+    ],
+    "date": "Jan — Mar 2021",
+    "institution": "Jamia Millia Islamia · Supervisor: Dr. Arshad Noor Siddique",
+    "tags": ["Mechanical Engineering", "Image Processing", "Automation"],
+    "link": null
+  }
+]

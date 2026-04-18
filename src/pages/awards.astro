@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import AwardItem from '../components/AwardItem.astro';
+import awards from '../data/awards.json';
+---
+
+<Layout title="Awards — Sarim Hashmi">
+  <Header />
+  <main>
+    <h1 class="page-title">Awards &amp; Achievements</h1>
+    <div class="awards-list">
+      {awards.map((item) => (
+        <AwardItem
+          title={item.title}
+          description={item.description}
+          date={item.date}
+        />
+      ))}
+    </div>
+    <div class="footer-spacer"></div>
+  </main>
+</Layout>

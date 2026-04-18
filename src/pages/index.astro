@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import publications from '../data/publications.json';
+
+const featuredPublications = publications
+  .filter((pub: any) => pub.featured)
+  .sort((a: any, b: any) => b.year - a.year);
+---
+
+<Layout title="Sarim Hashmi">
+  <Header />
+  <main>
+    <section class="about-section">
+      <div class="about-content">
+        <p>
+          I am a Research Engineer at <a href="https://mbzuai.ac.ae" target="_blank" rel="noopener">MBZUAI</a>, working with <a href="https://nilslukas.github.io" target="_blank" rel="noopener">Dr. Nils Lukas</a> on <strong>secure</strong>, <strong>private</strong>, and <strong>strategic</strong> machine learning. <strong>I am currently looking for PhD positions in AI security</strong>, with a particular focus on language-model agents that rely on retrieval, memory, and tools—systems in which many critical failures arise from the surrounding pipeline rather than the base model itself.
+        </p>
+        <p>
+          My work includes building <a href="https://www.etihad.com/en-in/" target="_blank" rel="noopener">Etihad Airways</a>' conversational agent, covering retrieval, planning, structured response generation, real-time voice agent integration, and a <em>UserLM</em> for stress-testing. I also contribute to <em>AdvSim2Real</em>, which aims to strengthen agentic systems through adversarial simulation. My work includes <em>PERSUADE</em>, a framework for auditing persuasion in LLMs, as well as research on authentic multimedia detection and vision-language robustness. Although these areas differ in surface form, they are connected by the same central concern: understanding how AI systems behave under pressure.
+        </p>
+        <p>
+          Previously, I completed an MSc by Research in Computer Vision at MBZUAI under the supervision of <a href="https://mbzuai.ac.ae/study/faculty/mohammad-yaqub/" target="_blank" rel="noopener">Dr. Mohammad Yaqub</a>. Before that, I earned a BTech in Mechanical Engineering from <a href="https://jmi.ac.in/" target="_blank" rel="noopener">Jamia Millia Islamia</a> and worked on autonomous-vehicle research at <a href="https://www.iiitd.ac.in/" target="_blank" rel="noopener">IIIT Delhi</a> under <a href="https://www.iiitd.ac.in/anands" target="_blank" rel="noopener">Dr. Saket Anand</a>.
+        </p>
+        <div class="about-links">
+          <a href="mailto:sarim.hashmi@mbzuai.ac.ae" class="about-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Email
+          </a>
+<a href="https://github.com/Sarim-MBZUAI" class="about-link" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            GitHub
+          </a>
+          <a href="https://scholar.google.com/citations?user=RMcwdxkAAAAJ&hl=en" class="about-link" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            Scholar
+          </a>
+          <a href="https://www.linkedin.com/in/sarim-hashmi-b10b35136/" class="about-link" target="_blank" rel="noopener">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="about-image">
+        <img src="/images/profile.jpg" alt="Sarim Hashmi" class="profile-image" />
+      </div>
+    </section>
+
+    <section class="mt-4">
+      <div class="section-header">
+        <h2 class="section-title">Publications</h2>
+        <a href="/publications" class="section-link">View all &rarr;</a>
+      </div>
+      {featuredPublications.length > 0 ? (
+        <div class="publications-list">
+          {featuredPublications.map((pub) => (
+            <PublicationItem
+              title={pub.title}
+              authors={pub.authors}
+              venue={pub.venue}
+              year={pub.year}
+              month={pub.month}
+              thumbnail={pub.thumbnail}
+              links={pub.links}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">No publications yet.</p>
+      )}
+    </section>
+    <div class="footer-spacer"></div>
+  </main>
+</Layout>

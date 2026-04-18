@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+}
+
+const { title, description, date } = Astro.props;
+---
+
+<article class="award-item">
+  <div class="award-header">
+    <h3 class="award-title">{title}</h3>
+    <span class="award-date">{date}</span>
+  </div>
+  <p class="award-description">{description}</p>
+</article>
+
+<style>
+  .award-item {
+    padding: 1.25rem 0;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .award-item:last-child {
+    border-bottom: none;
+  }
+
+  .award-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .award-title {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .award-date {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .award-description {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 600px) {
+    .award-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
+</style>

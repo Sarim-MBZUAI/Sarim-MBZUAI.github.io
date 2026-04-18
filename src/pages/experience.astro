@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
+import experience from '../data/experience.json';
+---
+
+<Layout title="Experience — Sarim Hashmi">
+  <Header />
+  <main>
+    <h1 class="page-title">Experience</h1>
+    <div class="projects-list">
+      {experience.map((item) => (
+        <ExperienceItem
+          title={item.title}
+          description={item.description}
+          date={item.date}
+          institution={item.institution}
+          tags={item.tags}
+          link={item.link}
+        />
+      ))}
+    </div>
+    <div class="footer-spacer"></div>
+  </main>
+</Layout>
