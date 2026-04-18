@@ -1,0 +1,64 @@
+---
+interface Props {
+  title: string;
+  description: string | string[];
+  date: string;
+  institution: string;
+  tags?: string[];
+  link?: string | null;
+}
+
+const { title, description, date, institution, tags, link } = Astro.props;
+
+// Render [text](url) markdown-style inline links in bullets
+const mdLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+const renderInline = (s: string) =>
+  s.replace(mdLink, (_m, text, url) => `<a href="${url}" target="_blank" rel="noopener">${text}</a>`);
+
+const bullets = Array.isArray(description) ? description.map(renderInline) : null;
+---
+
+<article class="project-item">
+  <div class="project-header">
+    <h3 class="project-title">
+      {link ? (
+        <a href={link} target="_blank" rel="noopener">{title}</a>
+      ) : (
+        title
+      )}
+    </h3>
+    <span class="project-meta">{date}</span>
+  </div>
+  <p class="project-institution">{institution}</p>
+  {bullets ? (
+    <ul class="project-bullets">
+      {bullets.map((b) => <li set:html={b} />)}
+    </ul>
+  ) : (
+    <p class="project-description">{description}</p>
+  )}
+  {tags && tags.length > 0 && (
+    <div class="project-tags">
+      {tags.map(tag => (
+        <span class="project-tag">{tag}</span>
+      ))}
+    </div>
+  )}
+</article>
+
+<style>
+  .project-bullets {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0.5rem 0 0.75rem 1.1rem;
+    padding: 0;
+  }
+  .project-bullets li {
+    margin-bottom: 0.35rem;
+  }
+  .project-bullets li::marker {
+    color: var(--accent);
+  }
+</style>

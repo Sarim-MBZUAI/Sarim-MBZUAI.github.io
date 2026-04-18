@@ -1,0 +1,78 @@
+[
+  {
+    "title": "CASS: Nvidia to AMD Transpilation with Data, Models, and Benchmark",
+    "authors": ["Ahmed Heakl", "Sarim Hashmi*", "Gustavo Bertolo Stahl*", "Seung Hun Eddie Han", "Mukul Ranjan", "Arina Kharlamova", "Salman Khan", "Abdulrahman Mahmoud"],
+    "venue": "ACL 2026",
+    "year": 2026,
+    "month": "April",
+    "featured": true,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2505.16968"
+    }
+  },
+  {
+    "title": "PERSUADE: A Debate Arena for Benchmarking, Optimizing, and Auditing Persuasion in Language Models",
+    "authors": ["Sarim Hashmi", "Samuele Poppi", "Salem Lahlou", "Martin Takáč", "Kshitij Mishra", "Nils Lukas"],
+    "venue": "Under review",
+    "year": 2026,
+    "month": "March",
+    "featured": true,
+    "links": {}
+  },
+  {
+    "title": "Robust and Calibrated Detection of Authentic Multimedia Content",
+    "authors": ["Sarim Hashmi", "Abdelrahman Elsayed", "Mohammed Talha Alam", "Samuele Poppi", "Nils Lukas"],
+    "venue": "Under review",
+    "year": 2025,
+    "month": "November",
+    "featured": true,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2512.15182"
+    }
+  },
+  {
+    "title": "Guaranteed Guess: A Language Modeling Approach for CISC-to-RISC Transpilation with Testing Guarantees",
+    "authors": ["Ahmed Heakl", "Sarim Hashmi", "Chaimaa Abi", "Celine Lee", "Abdulrahman Mahmoud"],
+    "venue": "EMNLP 2025",
+    "year": 2025,
+    "month": "May",
+    "featured": false,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2506.14606"
+    }
+  },
+  {
+    "title": "SALT: Parameter-Efficient Fine-Tuning via Singular Value Adaptation with Low-Rank Transformation",
+    "authors": ["Sarim Hashmi*", "Abdelrahman Elsayed*", "Mohammed Elseiagy", "Hu Wang", "Mohammad Yaqub", "Ibrahim Almakky"],
+    "venue": "BMVC 2025",
+    "year": 2025,
+    "month": "February",
+    "featured": true,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2503.16055"
+    }
+  },
+  {
+    "title": "Language and Planning in Robotic Navigation: A Multilingual Evaluation of State-of-the-Art Models",
+    "authors": ["Malak Mansour*", "Ahmed Aly*", "Bahey Tharwat*", "Sarim Hashmi", "Dong An", "Ian Reid"],
+    "venue": "AAAI Workshop 2025",
+    "year": 2025,
+    "month": "January",
+    "featured": false,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2501.05478"
+    }
+  },
+  {
+    "title": "Optimizing Brain Tumor Segmentation with MedNeXt: BraTS 2024 SSA and Pediatrics",
+    "authors": ["Sarim Hashmi", "Juan Lugo", "Abdelrahman Elsayed", "Dinesh Saggurthi", "Mohammed Elseiagy", "Alikhan Nurkamal", "Jaskaran Walia", "Fadillah Adamsyah Maani", "Mohammad Yaqub"],
+    "venue": "MICCAI Workshop 2024",
+    "year": 2024,
+    "month": "November",
+    "featured": false,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2411.15872",
+      "website": "https://python-arch.github.io/BioMbz-Optimizing-Brain-Tumor-Segmentation-with-MedNeXt-BraTS-2024-SSA-and-Pediatrics/"
+    }
+  }
+]
