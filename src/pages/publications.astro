@@ -12,7 +12,7 @@ const sortedPublications = [...publications].sort((a, b) => b.year - a.year);
   <Header />
   <main>
     <h1 class="page-title">Publications</h1>
-    <p class="publications-note"><span class="highlight">*</span> denotes equal contribution.</p>
+    <p class="publications-note"><span class="highlight">*</span> denotes equal contribution (random order).</p>
     {sortedPublications.length > 0 ? (
       <div class="publications-list">
         {sortedPublications.map((pub) => (
