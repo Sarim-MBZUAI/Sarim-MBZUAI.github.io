@@ -1,0 +1,16 @@
+[
+  { "date": "Apr 2026", "isNew": true, "text": "<em>CASS</em> (Nvidia → AMD transpilation) accepted at the <strong>ACL 2026 Main Conference</strong>." },
+  { "date": "Mar 2026", "isNew": true, "text": "Submitted <em>PERSUADE</em> — a debate arena for auditing persuasion in LLMs." },
+  { "date": "Mar 2026", "isNew": true, "text": "Submitted work on <em>robust and calibrated detection of authentic multimedia content</em>." },
+  { "date": "Oct 2025", "text": "Received the <strong>UAE Golden Visa</strong>, awarded for outstanding academic achievement." },
+  { "date": "Aug 2025", "text": "Secured <strong>3rd place</strong> at <strong>MICCAI BraTS 2025 — SSA Track</strong>." },
+  { "date": "Jul 2025", "text": "Started as <strong>Research Engineer</strong> at MBZUAI with <a href=\"https://nilslukas.github.io\" target=\"_blank\" rel=\"noopener\">Dr. Nils Lukas</a>, building Etihad Airways' conversational agent." },
+  { "date": "May 2025", "text": "<em>Guaranteed Guess</em> (CISC → RISC transpilation) accepted at <strong>EMNLP 2025</strong>; completed <strong>MSc (Research) in Computer Vision</strong> at MBZUAI." },
+  { "date": "May 2025", "text": "Won <strong>1st place</strong> at <strong>TAMMathon 2025</strong> (AED 25,000)." },
+  { "date": "Feb 2025", "text": "<em>SALT</em> (parameter-efficient fine-tuning via singular-value adaptation) accepted at <strong>BMVC 2025</strong>." },
+  { "date": "Nov 2024", "text": "<em>Optimizing Brain Tumor Segmentation with MedNeXt</em> accepted at <strong>MICCAI 2024</strong> Workshop; <strong>3rd place</strong> at BraTS 2024 SSA & Pediatrics Challenge." },
+  { "date": "May 2024", "text": "Joined <strong>Etisalat</strong> as a Machine Learning Engineer, building a RAG chatbot over Excel datasets." },
+  { "date": "Aug 2023", "text": "Joined <strong>MBZUAI</strong> for an <strong>MSc by Research in Computer Vision</strong> with a <strong>full-ride scholarship</strong>, under <a href=\"https://mbzuai.ac.ae/study/faculty/mohammad-yaqub/\" target=\"_blank\" rel=\"noopener\">Dr. Mohammad Yaqub</a>." },
+  { "date": "May 2023", "text": "Graduated from <strong>Jamia Millia Islamia</strong> with an outstanding GPA, completing my thesis under <strong>Prof. S. M. Muzakkir</strong> and <strong>Prof. Harish Hirani</strong> (co-guide, IIT Delhi)." },
+  { "date": "Mar 2022", "text": "Started as a <strong>Research Intern</strong> at <a href=\"https://www.iiitd.ac.in/\" target=\"_blank\" rel=\"noopener\">IIIT Delhi</a> with <a href=\"https://www.iiitd.ac.in/anands\" target=\"_blank\" rel=\"noopener\">Dr. Saket Anand</a> on an autonomous last-mile E-rickshaw (drive-by-wire, LiDAR calibration, YOLOP perception)." }
+]
