@@ -82,6 +82,11 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 
 ## Changelog
 
+**2026-05-07** — Bio "See more" toggle
+- Home-page bio is now collapsed after the first paragraph; clicking **See more** reveals the work-overview and education paragraphs
+- Pure progressive enhancement: `<button aria-expanded>` + `<div hidden>`, no layout shift, no library
+- Caret icon rotates 180° when expanded; button label flips to **See less**
+
 **2026-04-18 (update 2)** — PhD-application rewrite
 - Rewrote home-page bio to foreground research focus: **secure, private, strategic** machine learning, with emphasis on the security of LLM agents using retrieval, memory, and tools
 - Surfaces PhD application intent and the "complete agent pipelines" framing
