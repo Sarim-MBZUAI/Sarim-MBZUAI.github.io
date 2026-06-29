@@ -82,6 +82,10 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 
 ## Changelog
 
+**2026-06-29 (update 2)** — Extracurricular interests in bio
+- Added a closing paragraph to the home-page bio (end of the "See more" content) covering badminton, padel, gym, reading (novels + ML books), and watching MMA (UFC, BJJ, Muay Thai)
+- Single-file change (`src/pages/index.astro`); build verified
+
 **2026-06-29** — Cursor × Evoost AI Hackathon 2026 win
 - Added a news entry (prepended, `isNew`) announcing the win, linking the project repo `github.com/Salah-P/CursorHackathon-` (Hakim AI)
 - Added a matching award entry in `awards.json` ("Winner — Cursor x Evoost AI Hackathon 2026")
