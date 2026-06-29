@@ -82,6 +82,11 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 
 ## Changelog
 
+**2026-06-29** — Cursor × Evoost AI Hackathon 2026 win
+- Added a news entry (prepended, `isNew`) announcing the win, linking the project repo `github.com/Salah-P/CursorHackathon-` (Hakim AI)
+- Added a matching award entry in `awards.json` ("Winner — Cursor x Evoost AI Hackathon 2026")
+- Data-only change (`news.json`, `awards.json`); build verified
+
 **2026-05-07** — Bio "See more" toggle
 - Home-page bio is now collapsed after the first paragraph; clicking **See more** reveals the work-overview and education paragraphs
 - Pure progressive enhancement: `<button aria-expanded>` + `<div hidden>`, no layout shift, no library
