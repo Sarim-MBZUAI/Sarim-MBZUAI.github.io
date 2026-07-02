@@ -82,6 +82,13 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 
 ## Changelog
 
+**2026-06-29 (update 4)** — Ambient canvas background animation
+- Added a subtle, dependency-free Canvas 2D backdrop (`public/assets/js/bg.js`) rendering a **proximity graph** (jittered-grid dots that gently drift, thin faint lines to ~3 nearest neighbours) with 2–7 slow glowing **walkers** tracing edges node-to-node, plus a **scroll parallax** (backdrop moves at 40% page speed)
+- **Theme-aware**: reads `data-theme` on `<html>` and re-colours live via a `MutationObserver` when the toggle flips it — light uses accent `#BF8A54`, dark uses `#D4A574`; alphas kept very low to match the reference's subtlety
+- Respects `prefers-reduced-motion` (renders one static frame instead of animating) and pauses `requestAnimationFrame` when the tab is hidden; DPR capped at 2, debounced resize
+- Wired **site-wide** via `Layout.astro` (`<script is:inline src="/assets/js/bg.js">` before `</body>`); the canvas is fixed, full-viewport, `z-index:-1`, `pointer-events:none`, `aria-hidden`
+- CSS: moved the page background from `body` to `html` and set `body` transparent so the `z-index:-1` canvas is visible behind content in both themes (`public/styles/global.css`)
+
 **2026-06-29 (update 3)** — Reworded extracurricular paragraph
 - Polished the bio's closing extracurricular line for smoother flow (dropped the awkward "and … and to stay active"); same interests, same `<strong>` emphasis
 
