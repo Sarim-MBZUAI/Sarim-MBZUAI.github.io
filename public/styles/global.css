@@ -91,6 +91,10 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Page background lives on <html> so the fixed z-index:-1 canvas backdrop
+     (inserted into <body>) is visible in front of it but behind content. */
+  background-color: var(--bg);
+  transition: background-color 0.2s ease;
 }
 
 body {
@@ -98,8 +102,8 @@ body {
   font-size: var(--font-size-base);
   line-height: var(--line-height);
   color: var(--text);
-  background-color: var(--bg);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: transparent;
+  transition: color 0.2s ease;
 }
 
 body::before {
