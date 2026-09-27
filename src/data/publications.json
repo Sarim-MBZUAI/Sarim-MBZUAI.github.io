@@ -1,7 +1,7 @@
 [
   {
-    "title": "GROVE: Benchmarking and Training LLM Agents to Persuade",
-    "authors": ["Kshitij Mishra*", "Sarim Hashmi*", "Tair Djanibekov", "Dushyant Singh Chauhan", "Nils Lukas"],
+    "title": "AdvSim2Real: Training Web Agents Against Adaptive Prompt Injection in a Web World Model",
+    "authors": ["Sarim Hashmi", "Mukul Ranjan", "Kshitij Mishra", "Mikhail Kuznetsov", "Praneeth Vepakomma", "Nils Lukas"],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
@@ -18,8 +18,8 @@
     "links": {}
   },
   {
-    "title": "SIRA: Self-Improving Recommendation Agents under Demand Shifts",
-    "authors": ["Kshitij Mishra", "Sarim Hashmi", "Dushyant Singh Chauhan", "Martin Takáč", "Salem Lahlou", "Nils Lukas"],
+    "title": "GROVE: Benchmarking and Training LLM Agents to Persuade",
+    "authors": ["Sarim Hashmi*", "Kshitij Mishra*", "Tair Djanibekov", "Dushyant Singh Chauhan", "Nils Lukas"],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
@@ -27,8 +27,8 @@
     "links": {}
   },
   {
-    "title": "AdvSim2Real: Training Web Agents Against Adaptive Prompt Injection in a Web World Model",
-    "authors": ["Sarim Hashmi", "Mukul Ranjan", "Kshitij Mishra", "Mikhail Kuznetsov", "Praneeth Vepakomma", "Nils Lukas"],
+    "title": "SIRA: Self-Improving Recommendation Agents under Demand Shifts",
+    "authors": ["Kshitij Mishra", "Sarim Hashmi", "Dushyant Singh Chauhan", "Martin Takáč", "Salem Lahlou", "Nils Lukas"],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
