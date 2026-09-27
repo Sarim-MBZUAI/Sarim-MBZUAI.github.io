@@ -79,6 +79,7 @@ const featuredPublications = publications
         <h2 class="section-title">Publications</h2>
         <a href="/publications" class="section-link">View all &rarr;</a>
       </div>
+      <p class="publications-note"><span class="highlight">*</span> denotes equal contribution (random order).</p>
       {featuredPublications.length > 0 ? (
         <div class="publications-list">
           {featuredPublications.map((pub) => (
@@ -119,6 +120,13 @@ const featuredPublications = publications
 </script>
 
 <style>
+  .publications-note {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: -1.25rem;
+    margin-bottom: 1.5rem;
+  }
   .bio-toggle {
     display: inline-flex;
     align-items: center;
