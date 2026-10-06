@@ -1,5 +1,16 @@
 [
   {
+    "title": "Certification of Real Images through Calibrated Content Authentication",
+    "authors": ["Sarim Hashmi", "Abdelrahman Elsayed", "Mohammed Talha Alam", "Samuele Poppi", "Nils Lukas"],
+    "venue": "Under review",
+    "year": 2026,
+    "month": "October",
+    "featured": true,
+    "links": {
+      "paper": "https://arxiv.org/pdf/2610.05870"
+    }
+  },
+  {
     "title": "AdvSim2Real: Training Web Agents Against Adaptive Prompt Injection in a Web World Model",
     "authors": ["Sarim Hashmi", "Mukul Ranjan", "Kshitij Mishra", "Mikhail Kuznetsov", "Praneeth Vepakomma", "Nils Lukas"],
     "venue": "Under review",
