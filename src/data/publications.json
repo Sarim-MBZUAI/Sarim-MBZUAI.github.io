@@ -17,7 +17,9 @@
     "year": 2026,
     "month": "September",
     "featured": true,
-    "links": {}
+    "links": {
+      "paper": "https://arxiv.org/pdf/2610.08773"
+    }
   },
   {
     "title": "Noise Out, Bias In: Targeted Bias Injection in Diffusion Language Models via Closed-Loop Activation Steering",
