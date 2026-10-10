@@ -12,7 +12,7 @@ const featuredPublications = publications
 
 <Layout title="Sarim Hashmi">
   <Header />
-  <main>
+  <main class="home-main">
     <section class="about-section">
       <div class="about-content">
         <p>
@@ -52,8 +52,10 @@ const featuredPublications = publications
           </a>
         </div>
       </div>
-      <div class="about-image">
-        <img src="/images/profile.jpg" alt="Sarim Hashmi" class="profile-image" />
+    </section>
+
+    <aside class="home-rail">
+      <img src="/images/profile.jpg" alt="Sarim Hashmi" class="profile-image" />
 
         <section class="side-card">
           <h2 class="side-label">Contact</h2>
@@ -83,11 +85,10 @@ const featuredPublications = publications
               <span class="bio-place">Jamia Millia Islamia</span>
             </li>
           </ul>
-        </section>
-      </div>
-    </section>
+      </section>
+    </aside>
 
-    <section class="mt-4">
+    <section class="news-section">
       <div class="section-header">
         <h2 class="section-title">News</h2>
       </div>
@@ -104,7 +105,7 @@ const featuredPublications = publications
       </ul>
     </section>
 
-    <section class="mt-4">
+    <section class="pubs-section">
       <div class="section-header">
         <h2 class="section-title">Publications</h2>
         <a href="/publications" class="section-link">View all &rarr;</a>
@@ -150,19 +151,43 @@ const featuredPublications = publications
 </script>
 
 <style>
-  /* The side card makes the right column tall, so trim the gap that
-     used to sit between the about block and the sections below it. */
-  .about-section { margin-bottom: var(--space-xl); }
+  /* Two-column home layout: the portrait + card sit in a right rail that
+     runs alongside BOTH the intro and the News list, so the tall rail no
+     longer leaves a dead gap under the short intro paragraph. */
+  .home-main {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    column-gap: var(--space-2xl);
+    align-items: start;
+  }
+  .about-section {
+    grid-column: 1;
+    grid-row: 1;
+    display: block;
+    margin-bottom: 0;
+  }
+  .home-rail {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .news-section {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: var(--space-2xl);
+  }
+  .pubs-section {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: var(--space-3xl);
+  }
+  .footer-spacer { grid-column: 1 / -1; }
   .section-header { margin-bottom: var(--space-md); }
-  .mt-4 { margin-top: var(--space-2xl); }
 
   /* ---- Contact + Bio side card (under the portrait) ---- */
-  .about-image {
-    width: 200px;
-  }
   .profile-image {
     width: 100%;
     height: 244px;
+    display: block;
   }
   .side-card {
     margin-top: 1.5rem;
@@ -328,8 +353,11 @@ const featuredPublications = publications
     list-style: none;
     padding: 0 0.75rem 0 0;
     margin: 0;
-    max-height: 420px;
+    max-height: 430px;
     overflow-y: auto;
+    /* the list scrolls, so soften the cut instead of slicing a row in half */
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%);
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
@@ -406,13 +434,28 @@ const featuredPublications = publications
     background: #ff6b8a;
   }
   @media (max-width: 600px) {
-    .about-image { width: 100%; max-width: 340px; }
+    /* One column, and the rail's two halves split up: portrait on top,
+       contact card after the intro, so the bio still reads first. */
+    .home-main {
+      display: flex;
+      flex-direction: column;
+    }
+    .home-rail { display: contents; }
     .profile-image {
+      order: -2;
       width: 140px;
       height: 170px;
-      display: block;
-      margin: 0 auto;
+      margin: 0 auto var(--space-lg);
     }
+    .about-section { order: -1; }
+    .side-card {
+      order: 0;
+      width: 100%;
+      max-width: 340px;
+      margin: var(--space-xl) auto 0;
+    }
+    .news-section { order: 1; margin-top: var(--space-2xl); }
+    .pubs-section { order: 2; margin-top: var(--space-2xl); }
   }
   @media (max-width: 600px) {
     .news-list {
