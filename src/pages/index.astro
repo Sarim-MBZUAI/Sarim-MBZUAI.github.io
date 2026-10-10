@@ -153,6 +153,7 @@ const featuredPublications = publications
   /* The side card makes the right column tall, so trim the gap that
      used to sit between the about block and the sections below it. */
   .about-section { margin-bottom: var(--space-xl); }
+  .section-header { margin-bottom: var(--space-md); }
   .mt-4 { margin-top: var(--space-2xl); }
 
   /* ---- Contact + Bio side card (under the portrait) ---- */
@@ -252,13 +253,15 @@ const featuredPublications = publications
   .bio-list { list-style: none; margin: 0; padding: 0; }
   .bio-item {
     display: grid;
-    grid-template-columns: 3.6rem 1fr 1fr;
-    gap: 0.4rem;
-    font-size: 0.8125rem;
-    line-height: 1.35;
-    padding: 0.32rem 0;
+    grid-template-columns: 4rem 1fr;
+    column-gap: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    padding: 0.3rem 0;
   }
   .bio-year {
+    grid-row: span 2;
+    white-space: nowrap;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
   }
@@ -345,8 +348,8 @@ const featuredPublications = publications
   }
   .news-item {
     display: grid;
-    grid-template-columns: 110px 1fr;
-    gap: 1.25rem;
+    grid-template-columns: 88px 1fr;
+    gap: 1rem;
     padding: 0.85rem 0;
     border-bottom: 1px dashed var(--border);
     font-family: var(--font-sans);
