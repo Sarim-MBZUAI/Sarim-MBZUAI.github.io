@@ -54,6 +54,39 @@ const featuredPublications = publications
       </div>
       <div class="about-image">
         <img src="/images/profile.jpg" alt="Sarim Hashmi" class="profile-image" />
+
+        <section class="side-card">
+          <h2 class="side-label">Contact</h2>
+
+          <span class="tag tag-academic">Academic</span>
+          <a class="contact-link academic" href="mailto:sarim.hashmi@mbzuai.ac.ae">sarim.hashmi@mbzuai.ac.ae</a>
+          <p class="contact-place"><span class="place-icon" aria-hidden="true">🏫</span> MBZUAI, Abu Dhabi, UAE</p>
+
+          <span class="tag tag-personal">Personal</span>
+          <a class="contact-link personal" href="mailto:sarimhashmiai@gmail.com">sarimhashmiai@gmail.com</a>
+          <p class="contact-place personal"><span class="place-icon" aria-hidden="true">✉️</span> Abu Dhabi, UAE</p>
+
+          <p class="contact-note">Research and academic mail goes to the <strong>university address</strong>. Anything else can go to the personal address.</p>
+
+          <h2 class="side-label">Bio</h2>
+          <ul class="bio-list">
+            <li class="bio-item">
+              <span class="bio-year">2025&ndash;now</span>
+              <span class="bio-role">Research Engineer</span>
+              <span class="bio-place">MBZUAI</span>
+            </li>
+            <li class="bio-item">
+              <span class="bio-year">2023&ndash;25</span>
+              <span class="bio-role">MSc (Research)</span>
+              <span class="bio-place">MBZUAI</span>
+            </li>
+            <li class="bio-item">
+              <span class="bio-year">2019&ndash;23</span>
+              <span class="bio-role">BTech</span>
+              <span class="bio-place">Jamia Millia Islamia</span>
+            </li>
+          </ul>
+        </section>
       </div>
     </section>
 
@@ -120,6 +153,134 @@ const featuredPublications = publications
 </script>
 
 <style>
+  /* ---- Contact + Bio side card (under the portrait) ---- */
+  .about-image {
+    width: 200px;
+  }
+  .profile-image {
+    width: 100%;
+    height: 244px;
+  }
+  .side-card {
+    margin-top: 1.5rem;
+    font-family: var(--font-sans);
+    text-align: left;
+  }
+  .side-label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 0.7rem;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-bottom: 0.35rem;
+  }
+  .tag-academic {
+    background: rgba(191, 138, 84, 0.18);
+    color: #8a5f2e;
+  }
+  .tag-personal {
+    background: rgba(37, 99, 235, 0.12);
+    color: #2458c8;
+  }
+  .contact-link {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+    margin-bottom: 0.1rem;
+    color: var(--ink);
+  }
+  .contact-link.academic { --ink: var(--accent); --glint: #F3D3AC; }
+  .contact-link.personal { --ink: #2563eb; --glint: #9CC0FF; }
+
+  /* Slow highlight sweeping across the address. Falls back to a flat
+     colour where background-clip:text is unsupported. */
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .contact-link {
+      background-image: linear-gradient(
+        100deg,
+        var(--ink) 0%, var(--ink) 42%,
+        var(--glint) 50%,
+        var(--ink) 58%, var(--ink) 100%
+      );
+      background-size: 250% 100%;
+      background-repeat: no-repeat;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 5s linear infinite;
+    }
+  }
+  @keyframes shine {
+    from { background-position: 160% 0; }
+    to   { background-position: -60% 0; }
+  }
+  .contact-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .contact-place {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--accent);
+    margin: 0 0 1.05rem;
+  }
+  .contact-place.personal { color: #2563eb; }
+  .place-icon { font-style: normal; }
+  .contact-note {
+    font-size: 0.75rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin: 0 0 1.4rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--border);
+  }
+  .contact-note strong { color: var(--text); font-weight: 600; }
+  .bio-list { list-style: none; margin: 0; padding: 0; }
+  .bio-item {
+    display: grid;
+    grid-template-columns: 3.6rem 1fr 1fr;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    padding: 0.32rem 0;
+  }
+  .bio-year {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .bio-role { color: var(--text); font-weight: 500; }
+  .bio-place { color: var(--text-muted); font-style: italic; }
+
+  :global([data-theme="dark"]) .tag-academic {
+    background: rgba(212, 165, 116, 0.2);
+    color: #D4A574;
+  }
+  :global([data-theme="dark"]) .tag-personal {
+    background: rgba(138, 180, 248, 0.16);
+    color: #8ab4f8;
+  }
+  :global([data-theme="dark"]) .contact-link.personal { --ink: #8ab4f8; --glint: #D6E6FF; }
+  :global([data-theme="dark"]) .contact-place.personal { color: #8ab4f8; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-link { animation: none; }
+  }
+
   .publications-note {
     font-family: var(--font-sans);
     font-size: 0.875rem;
@@ -241,6 +402,15 @@ const featuredPublications = publications
   }
   :global([data-theme="dark"]) .news-new-dot {
     background: #ff6b8a;
+  }
+  @media (max-width: 600px) {
+    .about-image { width: 100%; max-width: 340px; }
+    .profile-image {
+      width: 140px;
+      height: 170px;
+      display: block;
+      margin: 0 auto;
+    }
   }
   @media (max-width: 600px) {
     .news-list {
