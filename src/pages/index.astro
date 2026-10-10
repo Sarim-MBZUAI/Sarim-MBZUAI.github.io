@@ -64,11 +64,8 @@ const featuredPublications = publications
 
           <span class="tag tag-personal">Personal</span>
           <a class="contact-link personal" href="mailto:sarimhashmiai@gmail.com">sarimhashmiai@gmail.com</a>
-          <p class="contact-place personal"><span class="place-icon" aria-hidden="true">✉️</span> Abu Dhabi, UAE</p>
 
-          <p class="contact-note">Research and academic mail goes to the <strong>university address</strong>. Anything else can go to the personal address.</p>
-
-          <h2 class="side-label">Bio</h2>
+          <h2 class="side-label bio-label">Bio</h2>
           <ul class="bio-list">
             <li class="bio-item">
               <span class="bio-year">2025&ndash;now</span>
@@ -153,6 +150,11 @@ const featuredPublications = publications
 </script>
 
 <style>
+  /* The side card makes the right column tall, so trim the gap that
+     used to sit between the about block and the sections below it. */
+  .about-section { margin-bottom: var(--space-xl); }
+  .mt-4 { margin-top: var(--space-2xl); }
+
   /* ---- Contact + Bio side card (under the portrait) ---- */
   .about-image {
     width: 200px;
@@ -216,6 +218,7 @@ const featuredPublications = publications
         var(--glint) 50%,
         var(--ink) 58%, var(--ink) 100%
       );
+      background-color: var(--ink);
       background-size: 250% 100%;
       background-repeat: no-repeat;
       -webkit-background-clip: text;
@@ -241,15 +244,11 @@ const featuredPublications = publications
   }
   .contact-place.personal { color: #2563eb; }
   .place-icon { font-style: normal; }
-  .contact-note {
-    font-size: 0.75rem;
-    line-height: 1.55;
-    color: var(--text-muted);
-    margin: 0 0 1.4rem;
-    padding-top: 0.9rem;
+  .bio-label {
+    margin-top: 1.2rem;
+    padding-top: 1.1rem;
     border-top: 1px dashed var(--border);
   }
-  .contact-note strong { color: var(--text); font-weight: 600; }
   .bio-list { list-style: none; margin: 0; padding: 0; }
   .bio-item {
     display: grid;
