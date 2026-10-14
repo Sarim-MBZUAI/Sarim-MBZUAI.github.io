@@ -35,6 +35,9 @@ const sortedPublications = [...publications].sort((a, b) => b.year - a.year);
 </Layout>
 
 <style>
+  :global([data-theme="dark"]) .publications-note {
+    color: #ffffff;
+  }
   .publications-note {
     font-family: var(--font-sans);
     font-size: 0.875rem;
