@@ -122,10 +122,10 @@
 
     /* Geometric shortest-path distance from one node to every other node,
        used so a click pulse travels along the graph rather than as a disc. */
-    function graphDistances(src) {
+    function graphDistances(seeds) {   /* seeds: [{ node, d }] */
       var n = nodes.length, dist = new Array(n), done = new Array(n), i;
       for (i = 0; i < n; i++) { dist[i] = Infinity; done[i] = false; }
-      dist[src] = 0;
+      for (i = 0; i < seeds.length; i++) dist[seeds[i].node] = Math.min(dist[seeds[i].node], seeds[i].d);
       for (var it = 0; it < n; it++) {
         var u = -1, best = Infinity;
         for (i = 0; i < n; i++) if (!done[i] && dist[i] < best) { best = dist[i]; u = i; }
@@ -145,17 +145,24 @@
        short-lived walkers set off from the same spot. */
     function pulseAt(cx, cy) {
       if (!nodes.length) return;
-      var gx = cx, gy = cy + scrollY() * PARALLAX, best = -1, bd = Infinity;
+      var gx = cx, gy = cy + scrollY() * PARALLAX, near = [];
       for (var i = 0; i < nodes.length; i++) {
-        var dx = nodes[i].bx - gx, dy = nodes[i].by - gy, d = dx * dx + dy * dy;
-        if (d < bd) { bd = d; best = i; }
+        var dx = nodes[i].bx - gx, dy = nodes[i].by - gy;
+        near.push({ node: i, d: Math.sqrt(dx * dx + dy * dy) });
       }
-      if (best < 0) return;
-      pulses.push({ x: gx, y: gy, origin: best, dist: graphDistances(best), r: 0, age: 0,
-                    speed: 520, maxR: Math.max(480, Math.min(W, VH) * 0.9) });
+      near.sort(function (a, b) { return a.d - b.d; });
+      /* "spokes": rays from the click point itself to the 3 nearest nodes.
+         The graph wave then continues from those nodes, offset by spoke length,
+         so the whole thing visibly starts under the cursor. */
+      var spokes = [];
+      for (var k = 0; k < near.length && spokes.length < 3; k++) {
+        if (k > 0 && near[k].d > 320) break;
+        spokes.push({ node: near[k].node, len: Math.max(1, near[k].d) });
+      }
+      pulses.push({ x: gx, y: gy, spokes: spokes, dist: graphDistances(spokes.map(function (sp) { return { node: sp.node, d: sp.len }; })), r: 0, age: 0,
+                    speed: 520, maxR: Math.max(420, Math.min(W, VH) * 0.75) });
       if (pulses.length > 4) pulses.shift();
-      nodes[best].heat = 1;
-      spawnWalker(best, 24); spawnWalker(best, 24);
+      spawnWalker(spokes[0].node, 24); spawnWalker(spokes[0].node, 24);
     }
 
     function step(w, dt) {
@@ -225,6 +232,21 @@
           bg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.28 * bl * ALPHA) + ')');
           bg.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(pu.x, pu.y, br, 0, Math.PI * 2); ctx.fill();
+        }
+        for (var si = 0; si < pu.spokes.length; si++) {
+          var sp = pu.spokes[si], tn = nodes[sp.node];
+          if ((pu.y < top && tn.by < top) || (pu.y > bot && tn.by > bot)) continue;
+          var sf = Math.min(1, pu.r / sp.len);
+          var sx = pu.x + (tn.x - pu.x) * sf, sy = pu.y + (tn.y - pu.y) * sf;
+          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, (sf < 1 ? 0.55 : 0.35) * k * ALPHA) + ')';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(pu.x, pu.y); ctx.lineTo(sx, sy); ctx.stroke();
+          if (sf < 1) {
+            var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 5);
+            sg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.6 * k * ALPHA) + ')');
+            sg.addColorStop(1, 'rgba(' + GLOW + ',0)');
+            ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI * 2); ctx.fill();
+          }
         }
         for (var ei = 0; ei < edges.length; ei++) {
           var ed = edges[ei], da = pu.dist[ed.a], db = pu.dist[ed.b];
