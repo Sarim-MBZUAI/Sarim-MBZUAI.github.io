@@ -404,6 +404,14 @@ const featuredPublications = publications
     font-style: italic;
     color: var(--text);
   }
+  /* Dark mode: grey body text sinks into the background, so lift it to white. */
+  :global([data-theme="dark"]) .news-text {
+    color: var(--text);
+  }
+  :global([data-theme="dark"]) .news-text strong,
+  :global([data-theme="dark"]) .news-text em {
+    color: #ffffff;
+  }
   .news-new {
     display: inline-flex;
     align-items: center;
