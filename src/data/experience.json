@@ -1,52 +1,61 @@
 [
   {
-    "title": "Research Engineer — Conversational Agent (Etihad Airways)",
+    "title": "Research Engineer",
     "description": [
-      "Built ingestion/cleaning pipelines for Adobe and NICE; extracted personas and planned journeys; unified these into a single retrieval layer for the agent.",
-      "Designed structured response schemas (single/multi-flight) with “flight transparency,” and extended planning/LLM logic to support all flight options on request.",
-      "Implemented real-time audio capability for the Etihad chatbot using ChatGPT's streaming API, enabling full-duplex voice interactions.",
-      "Integrated critical APIs (incl. return-journey), enabled targeted supervised fine-tuning, parallelized conversational state for latency, and added bi-directional audio with the same policies.",
-      "Designed and simulated a UserLM to emulate user behavior patterns, supporting training, evaluation, and stress-testing of the conversational system."
+      "Etihad AI: built ingestion and retrieval pipelines over Adobe and NICE data, extracted personas and planned journeys, integrated flight and return-journey APIs, and added real-time full-duplex voice via a streaming API.",
+      "Agent training: designed a UserLM simulator to emulate user behaviour for evaluation and stress-testing, and supported targeted supervised fine-tuning of the agent.",
+      "[AdvSim2Real](https://arxiv.org/abs/2610.08773): world-model-based training for web agents robust to adaptive prompt injection, in collaboration with Amazon. First author; submitted.",
+      "GROVE: benchmarked and trained LLM agents for persuasion. Equal contributor; submitted.",
+      "SIRA: self-improving recommendation agents that adapt to demand shifts through reinforcement learning. Second author; submitted.",
+      "PERSUADE: a debate arena for benchmarking, optimizing, and auditing persuasion in LLMs. First author; submitted.",
+      "[Noise Out, Bias In](https://arxiv.org/abs/2610.05894): closed-loop activation steering for targeted bias injection in diffusion language models, in collaboration with Cornell University. Equal contributor; submitted.",
+      "[Certification of Real Images](https://arxiv.org/abs/2610.05870): calibrated, diffusion-based content authentication with adversarial-robustness evaluation. First author; submitted."
     ],
-    "date": "Jul 2025 — Present",
+    "date": "Jun 2025 — Present",
     "institution": "MBZUAI · Supervisor: Dr. Nils Lukas",
-    "tags": ["LLMs", "Retrieval", "Conversational AI", "Streaming Audio", "Fine-Tuning"],
-    "link": null
-  },
-  {
-    "title": "AdvSim2Real — Adversarial Simulation for Agent Systems",
-    "description": [
-      "Strengthening LLM-agent pipelines against realistic failure modes through dynamic adversarial simulation.",
-      "Probing retrieval, memory, tool use, and multi-turn behavior under pressure to surface failure modes that do not appear in static evaluation."
+    "tags": [
+      "LLM Agents",
+      "Agent Security",
+      "Retrieval",
+      "Conversational AI",
+      "Fine-Tuning",
+      "Persuasion"
     ],
-    "date": "Ongoing",
-    "institution": "MBZUAI · Supervisor: Dr. Nils Lukas",
-    "tags": ["Agent Security", "Adversarial Robustness", "LLM Agents"],
     "link": null
   },
   {
-    "title": "UGRIP Mentor — BraTS MICCAI Challenge",
+    "title": "Research Mentor, UGRIP — BraTS 2024",
     "description": [
-      "Mentored 6 UGRIP interns and actively participated in the BraTS MICCAI challenge.",
-      "Enhanced the MedNeXt base model for BraTS 2023 by integrating a novel schedule-free optimizer introduced by Meta AI in the paper “The Road Less Scheduled”.",
-      "Implemented both greedy and uniform model souping techniques across 18 trained models with varied hyper-parameters to boost performance.",
-      "Awarded the Best Team Award within the UGRIP program.",
-      "Achieved 3rd place in MICCAI's prestigious BraTS 2024 SSA & Pediatrics Challenge and presented our research at MICCAI 2024."
+      "Mentored six UGRIP interns alongside three lab mentors under Dr. Mohammad Yaqub for the MICCAI BraTS 2024 challenge.",
+      "Enhanced the [MedNeXt](https://arxiv.org/abs/2411.15872) baseline with Meta AI's schedule-free optimizer from “The Road Less Scheduled”.",
+      "Applied greedy and uniform model souping across 18 models trained with different hyperparameters.",
+      "Earned the UGRIP Best Team Award and third place in the BraTS 2024 SSA and Pediatrics tracks; presented the work at MICCAI 2024."
     ],
-    "date": "Jun — Jul 2024",
-    "institution": "MBZUAI · Supervisor: Dr. Mohammad Yaqub",
-    "tags": ["Medical Imaging", "Brain Tumor Segmentation", "MedNeXt", "Model Souping"],
+    "date": "Jun — Aug 2024",
+    "institution": "BioMedIA, MBZUAI · Supervisor: Dr. Mohammad Yaqub",
+    "tags": [
+      "Medical Imaging",
+      "Brain Tumor Segmentation",
+      "MedNeXt",
+      "Model Souping"
+    ],
     "link": null
   },
   {
-    "title": "Machine Learning Engineer",
+    "title": "Machine Learning Engineer (Internship)",
     "description": [
-      "Developed a Retrieval-Augmented Generation (RAG) chatbot system that processes Excel datasets to deliver comprehensive data explanations, interactive QA responses, and actionable analytics insights.",
-      "Handled different meetings' requirements and goals with stakeholders."
+      "Built a retrieval-augmented generation (RAG) chatbot over Excel datasets, letting users ask natural-language questions and get answers grounded in business data.",
+      "Developed the retrieval and response workflows that surface relevant information and support interactive analysis of spreadsheet data.",
+      "Worked with stakeholders to translate reporting needs into chatbot functionality and analytical use cases."
     ],
     "date": "May — Jul 2024",
-    "institution": "Etisalat · Supervisor: Ahmed Hamada",
-    "tags": ["RAG", "NLP", "Analytics"],
+    "institution": "e& UAE (Etisalat) · Supervisor: Ahmed Hamada",
+    "tags": [
+      "RAG",
+      "LLMs",
+      "NLP",
+      "Analytics"
+    ],
     "link": null
   },
   {
@@ -60,7 +69,13 @@
     ],
     "date": "Mar 2022 — May 2023",
     "institution": "IIITD · Supervisor: Dr. Saket Anand",
-    "tags": ["Robotics", "Autonomous Driving", "LiDAR", "YOLOP", "Sensor Fusion"],
+    "tags": [
+      "Robotics",
+      "Autonomous Driving",
+      "LiDAR",
+      "YOLOP",
+      "Sensor Fusion"
+    ],
     "link": null
   },
   {
@@ -72,7 +87,11 @@
     ],
     "date": "Jan — Mar 2021",
     "institution": "Jamia Millia Islamia · Supervisor: Dr. Arshad Noor Siddique",
-    "tags": ["Mechanical Engineering", "Image Processing", "Automation"],
+    "tags": [
+      "Mechanical Engineering",
+      "Image Processing",
+      "Automation"
+    ],
     "link": null
   }
 ]
