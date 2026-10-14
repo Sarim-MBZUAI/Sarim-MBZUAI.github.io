@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+---
+
+<Layout title="Contact — Sarim Hashmi">
+  <Header />
+  <main class="contact-main">
+    <h1 class="page-title">Let's Connect</h1>
+    <p class="contact-lead">Open to collaborate. Just ping me.</p>
+
+    <section class="contact-card">
+      <svg class="contact-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <h2 class="contact-title">Book a 30-min Call</h2>
+      <p class="contact-sub">Directly schedule time on my calendar.</p>
+      <a class="contact-button" href="https://calendly.com/sarimhashmiai/30min" target="_blank" rel="noopener">View Calendar</a>
+    </section>
+
+    <p class="contact-alt">Or email me at <a href="mailto:sarim.hashmi@mbzuai.ac.ae">sarim.hashmi@mbzuai.ac.ae</a></p>
+    <div class="footer-spacer"></div>
+  </main>
+</Layout>
+
+<style>
+  .contact-main {
+    text-align: center;
+  }
+
+  .contact-main .page-title {
+    margin-bottom: var(--space-sm);
+  }
+
+  .contact-lead {
+    color: var(--text-muted);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .contact-card {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--space-xl);
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .contact-icon {
+    color: var(--accent);
+    margin-bottom: var(--space-xs);
+  }
+
+  .contact-title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-xl);
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+
+  .contact-sub {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-button {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .contact-button:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: #fff;
+    box-shadow: var(--shadow-hover);
+  }
+
+  .contact-alt {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 600px) {
+    .contact-card {
+      padding: var(--space-xl) var(--space-lg);
+    }
+  }
+</style>
