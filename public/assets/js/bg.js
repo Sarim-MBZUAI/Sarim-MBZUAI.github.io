@@ -32,8 +32,8 @@
     /* ALPHA scales every stroke/fill opacity. Dark backgrounds crush faint
        strokes on real displays, so dark mode draws noticeably stronger. */
     var PALETTE = {
-      light: { edge: '191, 138, 84', glow: '166, 117, 66', alpha: 1 },    /* --accent / --accent-hover */
-      dark:  { edge: '212, 165, 116', glow: '229, 186, 143', alpha: 2.6 } /* --accent / --accent-hover */
+      light: { edge: '201, 168, 128', glow: '222, 190, 142', alpha: 1 },   /* soft sand / pale gold */
+      dark:  { edge: '214, 190, 158', glow: '236, 214, 180', alpha: 2.4 } /* lighter, less saturated */
     };
     var EDGE = PALETTE.light.edge, GLOW = PALETTE.light.glow, ALPHA = 1;
     function applyColors() {
@@ -229,7 +229,7 @@
         if (bl > 0 && pu.y >= top && pu.y <= bot) {
           var br = 16 + 28 * (1 - bl);
           var bg = ctx.createRadialGradient(pu.x, pu.y, 0, pu.x, pu.y, br);
-          bg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.28 * bl * ALPHA) + ')');
+          bg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.22 * bl * ALPHA) + ')');
           bg.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(pu.x, pu.y, br, 0, Math.PI * 2); ctx.fill();
         }
@@ -238,12 +238,12 @@
           if ((pu.y < top && tn.by < top) || (pu.y > bot && tn.by > bot)) continue;
           var sf = Math.min(1, pu.r / sp.len);
           var sx = pu.x + (tn.x - pu.x) * sf, sy = pu.y + (tn.y - pu.y) * sf;
-          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, (sf < 1 ? 0.55 : 0.35) * k * ALPHA) + ')';
+          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, (sf < 1 ? 0.42 : 0.26) * k * ALPHA) + ')';
           ctx.lineWidth = 1.5;
           ctx.beginPath(); ctx.moveTo(pu.x, pu.y); ctx.lineTo(sx, sy); ctx.stroke();
           if (sf < 1) {
             var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 5);
-            sg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.6 * k * ALPHA) + ')');
+            sg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * ALPHA) + ')');
             sg.addColorStop(1, 'rgba(' + GLOW + ',0)');
             ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI * 2); ctx.fill();
           }
@@ -258,10 +258,10 @@
           if (f >= 1) { if (f < 1.5) ed.heat = Math.max(ed.heat, 0.85 * k); continue; }
           if ((fromN.by < top && toN.by < top) || (fromN.by > bot && toN.by > bot)) continue;
           var hx = fromN.x + (toN.x - fromN.x) * f, hy = fromN.y + (toN.y - fromN.y) * f;
-          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, 0.55 * k * ALPHA) + ')'; ctx.lineWidth = 1.5;
+          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, 0.42 * k * ALPHA) + ')'; ctx.lineWidth = 1.5;
           ctx.beginPath(); ctx.moveTo(fromN.x, fromN.y); ctx.lineTo(hx, hy); ctx.stroke();
           var hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 5);
-          hg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.6 * k * ALPHA) + ')');
+          hg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * ALPHA) + ')');
           hg.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx, hy, 5, 0, Math.PI * 2); ctx.fill();
         }
