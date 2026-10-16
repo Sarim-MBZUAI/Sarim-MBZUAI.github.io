@@ -25,6 +25,7 @@
     var ctx = canvas.getContext('2d');
     var W = 0, VH = 0, DOC = 0, DPR = 1;
     var nodes = [], edges = [], walkers = [], pulses = [];
+    var charge = null;          /* a press being held: { x, y (viewport), start } */
     var raf = null, lastT = 0;
 
     /* Theme-aware colours (Sarim's clay palette). EDGE = lines/nodes,
@@ -143,8 +144,9 @@
     /* Click/tap: a signal spreads outward from the nearest node along the
        edges, lighting each one as the wavefront passes, plus a couple of
        short-lived walkers set off from the same spot. */
-    function pulseAt(cx, cy) {
+    function pulseAt(cx, cy, k0) {
       if (!nodes.length) return;
+      if (k0 === undefined) k0 = 0.25;
       var gx = cx, gy = cy + scrollY() * PARALLAX, near = [];
       for (var i = 0; i < nodes.length; i++) {
         var dx = nodes[i].bx - gx, dy = nodes[i].by - gy;
@@ -154,15 +156,17 @@
       /* "spokes": rays from the click point itself to the 3 nearest nodes.
          The graph wave then continues from those nodes, offset by spoke length,
          so the whole thing visibly starts under the cursor. */
-      var spokes = [];
-      for (var k = 0; k < near.length && spokes.length < 3; k++) {
-        if (k > 0 && near[k].d > 320) break;
+      var spokes = [], want = 3 + Math.round(3 * k0), reach = 320 + 220 * k0;
+      for (var k = 0; k < near.length && spokes.length < want; k++) {
+        if (k > 0 && near[k].d > reach) break;
         spokes.push({ node: near[k].node, len: Math.max(1, near[k].d) });
       }
       pulses.push({ x: gx, y: gy, spokes: spokes, dist: graphDistances(spokes.map(function (sp) { return { node: sp.node, d: sp.len }; })), r: 0, age: 0,
-                    speed: 520, maxR: Math.max(420, Math.min(W, VH) * 0.75) });
+                    k0: k0, gain: 0.6 + 1.1 * k0, lw: 1.2 + 1.6 * k0,
+                    speed: 480 + 320 * k0, maxR: Math.max(420, Math.min(W, VH) * 0.75) * (0.55 + 0.8 * k0) });
       if (pulses.length > 4) pulses.shift();
-      spawnWalker(spokes[0].node, 24); spawnWalker(spokes[0].node, 24);
+      var wn = 2 + Math.round(4 * k0);
+      for (var wi = 0; wi < wn; wi++) spawnWalker(spokes[wi % spokes.length].node, 24);
     }
 
     function step(w, dt) {
@@ -227,9 +231,9 @@
         /* soft bloom at the click point for the first half second */
         var bl = Math.max(0, 1 - pu.age / 0.5);
         if (bl > 0 && pu.y >= top && pu.y <= bot) {
-          var br = 16 + 28 * (1 - bl);
+          var br = (16 + 28 * (1 - bl)) * (0.7 + 0.9 * pu.k0);
           var bg = ctx.createRadialGradient(pu.x, pu.y, 0, pu.x, pu.y, br);
-          bg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.22 * bl * ALPHA) + ')');
+          bg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.22 * bl * pu.gain * ALPHA) + ')');
           bg.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(pu.x, pu.y, br, 0, Math.PI * 2); ctx.fill();
         }
@@ -238,12 +242,12 @@
           if ((pu.y < top && tn.by < top) || (pu.y > bot && tn.by > bot)) continue;
           var sf = Math.min(1, pu.r / sp.len);
           var sx = pu.x + (tn.x - pu.x) * sf, sy = pu.y + (tn.y - pu.y) * sf;
-          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, (sf < 1 ? 0.42 : 0.26) * k * ALPHA) + ')';
-          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, (sf < 1 ? 0.42 : 0.26) * k * pu.gain * ALPHA) + ')';
+          ctx.lineWidth = pu.lw;
           ctx.beginPath(); ctx.moveTo(pu.x, pu.y); ctx.lineTo(sx, sy); ctx.stroke();
           if (sf < 1) {
             var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 5);
-            sg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * ALPHA) + ')');
+            sg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * pu.gain * ALPHA) + ')');
             sg.addColorStop(1, 'rgba(' + GLOW + ',0)');
             ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI * 2); ctx.fill();
           }
@@ -255,20 +259,38 @@
           var d0 = Math.min(da, db);
           if (pu.r < d0) continue;
           var f = (pu.r - d0) / ed.len;
-          if (f >= 1) { if (f < 1.5) ed.heat = Math.max(ed.heat, 0.85 * k); continue; }
+          if (f >= 1) { if (f < 1.5) ed.heat = Math.max(ed.heat, Math.min(1, 0.85 * k * pu.gain)); continue; }
           if ((fromN.by < top && toN.by < top) || (fromN.by > bot && toN.by > bot)) continue;
           var hx = fromN.x + (toN.x - fromN.x) * f, hy = fromN.y + (toN.y - fromN.y) * f;
-          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, 0.42 * k * ALPHA) + ')'; ctx.lineWidth = 1.5;
+          ctx.strokeStyle = 'rgba(' + GLOW + ',' + Math.min(1, 0.42 * k * pu.gain * ALPHA) + ')'; ctx.lineWidth = pu.lw;
           ctx.beginPath(); ctx.moveTo(fromN.x, fromN.y); ctx.lineTo(hx, hy); ctx.stroke();
           var hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 5);
-          hg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * ALPHA) + ')');
+          hg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, 0.48 * k * pu.gain * ALPHA) + ')');
           hg.addColorStop(1, 'rgba(' + GLOW + ',0)');
           ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx, hy, 5, 0, Math.PI * 2); ctx.fill();
         }
         for (var ni = 0; ni < nodes.length; ni++) {
           var dn = pu.dist[ni];
-          if (dn <= pu.r && dn > pu.r - band) nodes[ni].heat = Math.max(nodes[ni].heat, k);
+          if (dn <= pu.r && dn > pu.r - band) nodes[ni].heat = Math.max(nodes[ni].heat, Math.min(1, k * pu.gain));
         }
+      }
+      if (charge) {
+        /* a cluster of sparks that grows and jitters while you hold; once
+           fully charged it breathes */
+        var held = s - charge.start, c = Math.min(1, held / 0.6);
+        var cxp = charge.x, cyp = charge.y + scrollY() * PARALLAX;
+        var rad = 5 + 18 * c + (c >= 1 ? Math.sin(s * 9) * 2.5 : 0);
+        var nd = 6 + Math.round(8 * c);
+        for (var ci = 0; ci < nd; ci++) {
+          var ca = (ci / nd) * Math.PI * 2 + s * (1.2 + c), jr = rad + (Math.random() - 0.5) * (3 + 6 * c);
+          var sx2 = cxp + Math.cos(ca) * jr, sy2 = cyp + Math.sin(ca) * jr;
+          ctx.fillStyle = 'rgba(' + GLOW + ',' + Math.min(1, (0.35 + 0.45 * c) * ALPHA) + ')';
+          ctx.beginPath(); ctx.arc(sx2, sy2, 1.1 + 0.9 * c, 0, Math.PI * 2); ctx.fill();
+        }
+        var cg = ctx.createRadialGradient(cxp, cyp, 0, cxp, cyp, rad * 0.9);
+        cg.addColorStop(0, 'rgba(' + GLOW + ',' + Math.min(1, (0.18 + 0.3 * c) * ALPHA) + ')');
+        cg.addColorStop(1, 'rgba(' + GLOW + ',0)');
+        ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cxp, cyp, rad * 0.9, 0, Math.PI * 2); ctx.fill();
       }
       for (var w = 0; w < walkers.length; w++) {
         var wk = walkers[w]; step(wk, dt);
@@ -323,13 +345,27 @@
       else if (Math.abs(docHeight() - DOC) > VH) onResize();
     }, { passive: true });
     document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
-    // Click / tap anywhere: send a signal through the graph from that spot.
+    // Press anywhere to charge, release to send a signal through the graph
+    // from that spot. A quick tap is a small pulse; holding for ~0.6 s gives
+    // a bigger, faster, brighter one. The charge rides along with the pointer.
     window.addEventListener('pointerdown', function (ev) {
       if (reduce) return;
       if (ev.pointerType === 'mouse' && ev.button !== 0) return;
-      pulseAt(ev.clientX, ev.clientY);
+      charge = { x: ev.clientX, y: ev.clientY, start: performance.now() / 1000 };
       start();
     }, { passive: true });
+    window.addEventListener('pointermove', function (ev) {
+      if (charge) { charge.x = ev.clientX; charge.y = ev.clientY; }
+    }, { passive: true });
+    function release() {
+      if (!charge) return;
+      var held = performance.now() / 1000 - charge.start;
+      pulseAt(charge.x, charge.y, Math.max(0.15, Math.min(1, held / 0.6)));
+      charge = null;
+    }
+    window.addEventListener('pointerup', release, { passive: true });
+    window.addEventListener('pointercancel', function () { charge = null; }, { passive: true });
+    window.addEventListener('blur', function () { charge = null; });
     if (mq && mq.addEventListener) {
       mq.addEventListener('change', function (ev) {
         reduce = ev.matches; stop();
