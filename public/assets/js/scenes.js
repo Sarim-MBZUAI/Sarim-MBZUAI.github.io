@@ -381,15 +381,18 @@
      trained agent) the injected line is flagged and ignored. The switch
      toggles the defence; a click on the page plants a new attack. ── */
   function agentScene(canvas) {
-    var ctx = canvas.getContext('2d'), W = 0, H = 0, cw = 7, lh = 15, cols = 0, rows = 0;
+    var ctx = canvas.getContext('2d'), W = 0, H = 0, cw = 7, lh = 15, cols = 0, rows = 0, stacked = false;
     var FONT = '500 12px ' + MONO, FONTB = '700 12px ' + MONO;
     function resize() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = canvas.clientWidth; H = canvas.clientHeight;
-      if (!W || !H) return;
+      W = canvas.clientWidth; if (!W) return;
+      ctx.font = FONT; cw = ctx.measureText('M').width; cols = Math.floor(W / cw);
+      stacked = cols < 84;                                  /* phones: boxes go top to bottom */
+      canvas.style.height = stacked ? '600px' : '';
+      H = canvas.clientHeight; if (!H) return;
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = FONT; ctx.textBaseline = 'top';
-      cw = ctx.measureText('M').width; cols = Math.floor(W / cw); rows = Math.floor(H / lh);
+      rows = Math.floor(H / lh);
     }
     var RED = function () { return P.dark ? [226, 78, 72] : [186, 40, 40]; };
     var GREEN = function () { return P.dark ? [120, 190, 140] : [58, 128, 90]; };
@@ -440,16 +443,24 @@
       if (!ep || t - ep.t0 > T_END) newEpisode(t);
       var e = t - ep.t0, at = ep.attack, def = ep.def, i, r;
       ctx.clearRect(0, 0, W, H);
-      var lw = Math.floor(cols * 0.40), mw = Math.floor(cols * 0.33), rw = cols - lw - mw;
-      var L = 0, M = lw, R = lw + mw;
-      box(L, 0, lw, rows, 'web page'); box(M, 0, mw, rows, 'agent'); box(R, 0, rw, rows, 'outcome');
-      var inner = lw - 4;
+      var PB, AB, OB;
+      if (stacked) {
+        var ph = PAGE.length + 4, oh = 9;
+        PB = { c: 0, r: 0, w: cols, h: ph };
+        AB = { c: 0, r: ph, w: cols, h: Math.max(15, rows - ph - oh) };
+        OB = { c: 0, r: ph + AB.h, w: cols, h: oh };
+      } else {
+        var lw = Math.floor(cols * 0.40), mw = Math.floor(cols * 0.33);
+        PB = { c: 0, r: 0, w: lw, h: rows }; AB = { c: lw, r: 0, w: mw, h: rows }; OB = { c: lw + mw, r: 0, w: cols - lw - mw, h: rows };
+      }
+      box(PB.c, PB.r, PB.w, PB.h, 'web page'); box(AB.c, AB.r, AB.w, AB.h, 'agent'); box(OB.c, OB.r, OB.w, OB.h, 'outcome');
+      var L = PB.c, M = AB.c, R = OB.c, lw = PB.w, mw = AB.w, rw = OB.w, inner = lw - 4;
 
       /* ── the page: lines type in, then the attack lands in a blank slot ── */
       var shown = Math.min(PAGE.length, Math.floor(e / T_LOAD * PAGE.length) + 1);
       var retIdx = e >= T_RET0 && e < T_RET1 ? Math.floor((e - T_RET0) / (T_RET1 - T_RET0) * PAGE.length) : -1;
       for (i = 0; i < PAGE.length; i++) {
-        r = 2 + i;
+        r = PB.r + 2 + i;
         if (i === retIdx) { band(L + 1, r, lw - 2, P.accent, 0.18); put(L + 1, r, '>', P.accent, 1, true); }
         if (i === ep.row && e >= T_INJ) {
           var txt = fit(at.line, inner), flagged = def && e >= T_REA1;
@@ -459,21 +470,22 @@
         }
         if (i < shown) put(L + 2, r, fit(PAGE[i], inner), i === 0 ? P.ink : P.muted, i === 0 ? 1 : 0.85, i === 0);
       }
-      if (def && e >= T_REA1) put(L + 2, rows - 2, fit('↑ flagged: page text is not an instruction', inner), GREEN(), 0.95);
-      else if (e >= T_INJ) put(L + 2, rows - 2, fit('↑ planted: looks like page text to a reader', inner), RED(), 0.7);
+      if (def && e >= T_REA1) put(L + 2, PB.r + PB.h - 2, fit('↑ flagged: page text is not an instruction', inner), GREEN(), 0.95);
+      else if (e >= T_INJ) put(L + 2, PB.r + PB.h - 2, fit('↑ planted: looks like page text to a reader', inner), RED(), 0.7);
 
       /* ── the agent: step strip, context, reasoning ── */
       var step = e < T_RET0 ? -1 : e < T_REA0 ? 0 : e < T_ACT ? 1 : 2;
       var steps = ['retrieve', 'reason', 'act'], c = M + 2;
       for (i = 0; i < 3; i++) {
         var on = step === i;
-        if (on) band(c, 2, steps[i].length, P.accent, 0.22);
-        put(c, 2, steps[i], on ? P.ink : P.muted, on ? 1 : 0.7, on);
+        if (on) band(c, AB.r + 2, steps[i].length, P.accent, 0.22);
+        put(c, AB.r + 2, steps[i], on ? P.ink : P.muted, on ? 1 : 0.7, on);
         c += steps[i].length;
-        if (i < 2) { put(c, 2, ' → ', P.muted, 0.7); c += 3; }
+        if (i < 2) { put(c, AB.r + 2, ' → ', P.muted, 0.7); c += 3; }
       }
-      put(M + 2, 4, fit('task: cheapest AUH → LHR', mw - 4), P.ink, 0.95);
-      var mi = mw - 4, row = 6;
+      var stripEnd = c;
+      put(M + 2, AB.r + 4, fit('task: cheapest AUH → LHR', mw - 4), P.ink, 0.95);
+      var mi = mw - 4, row = AB.r + 6;
       if (e >= T_RET0) {
         put(M + 2, row++, 'context', P.muted, 0.8, true);
         var got = e < T_RET1 ? retIdx : PAGE.length;
@@ -489,7 +501,7 @@
         for (i = start; i < keep.length; i++) put(M + 2, row++, fit((keep[i].bad ? '! ' : '· ') + keep[i].t, mi), keep[i].bad ? RED() : P.muted, keep[i].bad ? 0.95 : 0.75);
       }
       if (e >= T_REA0) {
-        row = Math.max(row + 1, 12);
+        row = Math.max(row + 1, AB.r + 12);
         put(M + 2, row++, 'reasoning', P.muted, 0.8, true);
         var lines = def
           ? [['page says: ' + at.line, 0], ['page text ≠ user intent → ignore', 1], ['plan: book row 1 · AED 1,240', 1]]
@@ -502,27 +514,31 @@
         }
       }
       if (e >= T_ACT) {
-        var k = Math.min(1, (e - T_ACT) / 0.5), ax = (M + mw - 3) + (R + 1 - (M + mw - 3)) * k;
-        put(Math.round(ax), 2, '▶', def ? GREEN() : RED(), 1, true);
+        var k = Math.min(1, (e - T_ACT) / 0.5);
+        if (stacked) put(stripEnd + 1 + Math.round((mw - 4 - (stripEnd + 1)) * k), AB.r + 2, '▶', def ? GREEN() : RED(), 1, true);
+        else { var ax = (M + mw - 3) + (R + 1 - (M + mw - 3)) * k; put(Math.round(ax), 2, '▶', def ? GREEN() : RED(), 1, true); }
       }
 
       /* ── outcome: the switch, the verdict, the tally ── */
-      var ri = rw - 4;
-      put(R + 2, 2, 'defence', P.muted, 0.8, true);
-      put(R + 2, 3, fit('AdvSim2Real-trained', ri), P.muted, 0.7);
+      /* stacked: defence and verdict on the left, tally on the right; wide: one column */
+      var ri = stacked ? Math.floor(rw / 2) - 3 : rw - 4, o = OB.r + (stacked ? 1 : 2), vr = OB.r + (stacked ? 5 : 7);
+      var tc = stacked ? R + Math.floor(rw / 2) : R + 2, tr = stacked ? OB.r + 1 : OB.r + OB.h - 6;
+      var vi = stacked ? rw - 4 : ri;                      /* verdict lines run the full width when stacked */
+      put(R + 2, o, 'defence', P.muted, 0.8, true);
+      put(R + 2, o + 1, fit('AdvSim2Real-trained', ri), P.muted, 0.7);
       var sw = defence ? '[ ON  ]' : '[ off ]';
-      band(R + 2, 4, sw.length, defence ? GREEN() : P.muted, defence ? 0.25 : 0.15);
-      put(R + 2, 4, sw, defence ? GREEN() : P.ink, 1, true);
-      swRect = { c0: R + 1, c1: R + rw - 1, r0: 2, r1: 5 };
+      band(R + 2, o + 2, sw.length, defence ? GREEN() : P.muted, defence ? 0.25 : 0.15);
+      put(R + 2, o + 2, sw, defence ? GREEN() : P.ink, 1, true);
+      swRect = { c0: R + 1, c1: stacked ? tc - 1 : R + rw - 1, r0: o, r1: o + 3 };
       if (e >= T_ACT + 0.5) {
         if (!ep.scored) { ep.scored = true; tally.n++; if (def) tally.caught++; else tally.hijacked++; }
-        if (def) { put(R + 2, 7, 'SAFE', GREEN(), 1, true); put(R + 2, 8, fit('booked AED 1,240', ri), GREEN(), 0.95); put(R + 2, 9, fit('attack ignored', ri), GREEN(), 0.8); }
-        else { put(R + 2, 7, 'HIJACKED', RED(), 1, true); put(R + 2, 8, fit(at.bad, ri), RED(), 0.95); put(R + 2, 9, fit('agent did what the page said', ri), RED(), 0.8); }
-      } else if (e >= T_INJ) put(R + 2, 7, 'running…', P.muted, 0.7);
-      put(R + 2, rows - 6, 'tally', P.muted, 0.8, true);
-      put(R + 2, rows - 5, fit('episodes  ' + tally.n, ri), P.ink, 0.9);
-      put(R + 2, rows - 4, fit('caught    ' + tally.caught, ri), GREEN(), 0.9);
-      put(R + 2, rows - 3, fit('hijacked  ' + tally.hijacked, ri), RED(), 0.9);
+        if (def) { put(R + 2, vr, 'SAFE', GREEN(), 1, true); put(R + 2, vr + 1, fit('booked AED 1,240', vi), GREEN(), 0.95); put(R + 2, vr + 2, fit('attack ignored', vi), GREEN(), 0.8); }
+        else { put(R + 2, vr, 'HIJACKED', RED(), 1, true); put(R + 2, vr + 1, fit(at.bad, vi), RED(), 0.95); put(R + 2, vr + 2, fit('agent did what the page said', vi), RED(), 0.8); }
+      } else if (e >= T_INJ) put(R + 2, vr, 'running…', P.muted, 0.7);
+      put(tc, tr, 'tally', P.muted, 0.8, true);
+      put(tc, tr + 1, fit('episodes  ' + tally.n, ri), P.ink, 0.9);
+      put(tc, tr + 2, fit('caught    ' + tally.caught, ri), GREEN(), 0.9);
+      put(tc, tr + 3, fit('hijacked  ' + tally.hijacked, ri), RED(), 0.9);
     }
 
     canvas._frame = frame; all.push(frame); frame(0);
