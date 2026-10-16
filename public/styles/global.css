@@ -120,6 +120,18 @@ body::before {
   z-index: 1000;
 }
 
+/* Cosmic rays: a layer over everything, blended in difference so a ray
+   inverts whatever it crosses */
+.ray-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
 /* Container */
 .container {
   max-width: var(--max-width);

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import PublicationItem from '../components/PublicationItem.astro';
+import Scenes from '../components/Scenes.astro';
 import publications from '../data/publications.json';
 
 // Sort publications by year (newest first)
@@ -30,6 +31,7 @@ const sortedPublications = [...publications].sort((a, b) => b.year - a.year);
     ) : (
       <p class="empty-state">No publications yet.</p>
     )}
+    <Scenes life />
     <div class="footer-spacer"></div>
   </main>
 </Layout>

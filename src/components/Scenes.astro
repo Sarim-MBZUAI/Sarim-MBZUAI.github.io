@@ -1,0 +1,113 @@
+---
+// ASCII scenes: the loss landscape, Conway's Game of Life and the cosmic-ray
+// flux dial. Each page picks which ones it shows. The drawing lives in
+// /assets/js/scenes.js (loaded by Layout).
+interface Props { agent?: boolean; landscape?: boolean; life?: boolean; flux?: boolean; class?: string; }
+const { agent = false, landscape = false, life = false, flux = false, class: className } = Astro.props;
+---
+
+    <section class:list={["scenes-section", className]}>
+      {agent && (
+      <figure class="scene scene-agent">
+        <canvas id="scene-agent" aria-label="A toy prompt-injection playground: an agent reads a web page with a planted instruction"></canvas>
+        <figcaption class="scene-caption">a toy of <b>AdvSim2Real</b>: an agent booking the cheapest flight reads a page with a planted instruction, then retrieves, reasons and acts. with the defence off it does what the page says; with it on, the injected line is flagged and ignored. click the switch to toggle the defence; click the page to plant a new attack.</figcaption>
+      </figure>
+      )}
+      {landscape && (
+      <figure class="scene scene-landscape">
+        <canvas id="scene-landscape" aria-label="A loss landscape with points running gradient descent"></canvas>
+        <figcaption class="scene-caption">a loss landscape, blue in the valleys and red on the peaks. three optimisers descend from the same start: <b>o</b> sgd, <b>@</b> momentum, <b>#</b> adam. move across to raise a hill; click to drop a new start.</figcaption>
+      </figure>
+      )}
+      {life && (
+      <div class="scene scene-life" aria-label="Conway's Game of Life">
+        <canvas id="scene-life"></canvas>
+        <p class="scene-caption">conway's game of life, twelve generations a second on a torus. <b>*</b> just born, <b>o</b> alive, <b>#</b> alive for 20+ generations, <b>.</b> just died. click to sow a few cells; a still board reseeds itself.</p>
+      </div>
+      )}
+      {flux && (
+      <div class="flux" id="flux">
+        <div class="flux-head">
+          <span class="flux-label">cosmic ray flux &mdash; drag to set</span>
+          <span class="flux-count"><span id="flux-count">0</span> hits this visit</span>
+        </div>
+        <pre class="flux-meter" id="flux-meter" role="slider" tabindex="0" aria-label="Cosmic ray flux" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"></pre>
+        <p class="flux-note" id="flux-note"></p>
+      </div>
+      )}
+    </section>
+
+<style>
+  .scenes-section {
+    grid-column: 1 / -1;
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-xl);
+    border-top: 1px dashed var(--border);
+  }
+  .scene { margin: 0; }
+  .scene + .scene { margin-top: var(--space-2xl); }
+  .scene canvas {
+    display: block;
+    width: 100%;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .scene-landscape canvas { height: 300px; }
+  .scene-agent canvas { height: 330px; cursor: pointer; }
+  .scene-life canvas { height: 170px; }
+  .scene-caption {
+    margin: 6px 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-align: left;
+  }
+
+  /* the flux dial */
+  .flux {
+    position: relative;
+    margin-top: var(--space-2xl);
+    padding: 14px 18px 12px;
+    border: 1px dashed var(--border);
+    border-radius: var(--border-radius);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--text-muted);
+  }
+  .flux-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .flux-label { flex: 1 1 auto; min-width: 0; }
+  .flux-count { white-space: nowrap; }
+  .flux-count span { color: var(--accent); }
+  .flux-meter {
+    margin: 2px 0 6px;
+    padding: 10px 0;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    white-space: pre;
+    overflow: hidden;
+    color: var(--text);
+    cursor: ew-resize;
+    user-select: none;
+    touch-action: none;
+    outline: none;
+  }
+  .flux-meter:focus-visible { box-shadow: 0 0 0 2px rgba(191, 138, 84, 0.35); border-radius: 2px; }
+  .flux-note { margin: 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--text-muted); }
+  .flux-note.hot { color: var(--accent); }
+  .scene-caption b { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--text); font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .scene-landscape canvas { height: 220px; }
+    .scene-agent canvas { height: 360px; }
+    .flux-head { flex-direction: column; gap: 4px; }
+  }
+</style>
