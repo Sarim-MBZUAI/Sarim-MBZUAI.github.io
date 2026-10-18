@@ -21,7 +21,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
     <title>visitors | Sarim Hashmi</title>
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23a86415'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23BF8A54'/%3E%3C/svg%3E"
     />
     <script is:inline>
       /* Apply the site's saved theme (or the system one) before first paint. */
@@ -38,7 +38,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400&display=swap"
     />
     <link
       rel="stylesheet"
@@ -47,7 +47,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
       crossorigin="anonymous"
     />
     <style is:global>
-      /* Colors mirror the website theme (_sass/_themes.scss). */
+      /* Base palette; overridden by the "site theme" block at the end of this stylesheet. */
       :root {
         color-scheme: light;
         --bg: #faf9f5;
@@ -1082,6 +1082,118 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         #map {
           height: 340px;
         }
+      }
+
+      /* ---------- site theme: same palette, fonts and dashed borders as public/styles/global.css ---------- */
+      :root {
+        --bg: #f2f1ec;
+        --card: #f2f1ec;
+        --text: #171717;
+        --text-light: #6e6e6e;
+        --theme: #bf8a54;
+        --theme-text: #ffffff;
+        --hover: #a67542;
+        --link: #a67542;
+        --divider: #171717;
+        --border-light: rgba(23, 23, 23, 0.14);
+        --focus: rgba(191, 138, 84, 0.22);
+        --row-hover: rgba(191, 138, 84, 0.08);
+        --shadow: rgba(0, 0, 0, 0);
+        --shadow-strong: rgba(0, 0, 0, 0.08);
+        --header-bg: rgba(242, 241, 236, 0.94);
+        --series: #bf8a54;
+        --series-active: #a67542;
+        --grid: rgba(23, 23, 23, 0.08);
+        --axis: rgba(23, 23, 23, 0.3);
+      }
+      html[data-theme="dark"] {
+        --bg: #161616;
+        --card: #222222;
+        --text: #ebebeb;
+        --text-light: #888888;
+        --theme: #d4a574;
+        --theme-text: #161616;
+        --hover: #e5ba8f;
+        --link: #e5ba8f;
+        --divider: rgba(255, 255, 255, 0.2);
+        --border-light: rgba(255, 255, 255, 0.08);
+        --focus: rgba(212, 165, 116, 0.26);
+        --row-hover: rgba(212, 165, 116, 0.1);
+        --shadow: rgba(0, 0, 0, 0);
+        --shadow-strong: rgba(0, 0, 0, 0.3);
+        --header-bg: rgba(22, 22, 22, 0.94);
+        --series: #d4a574;
+        --series-active: #e5ba8f;
+        --grid: rgba(255, 255, 255, 0.07);
+        --axis: rgba(255, 255, 255, 0.2);
+      }
+      html,
+      body {
+        font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .brand {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-weight: 400;
+        font-size: 1.5rem;
+        letter-spacing: 0.03em;
+      }
+      .brand span {
+        font-family: "Manrope", sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 0;
+      }
+      .post-title {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: clamp(2.4rem, 5vw, 3.2rem);
+        letter-spacing: 0.01em;
+      }
+      .tile-value {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-weight: 400;
+        font-size: 2.15rem;
+        letter-spacing: 0.01em;
+      }
+      .card-head h2 {
+        letter-spacing: -0.01em;
+      }
+      .card,
+      .tile,
+      .login-card,
+      .seg,
+      .btn,
+      select,
+      input[type="search"] {
+        border-style: dashed;
+        border-radius: 6px;
+        box-shadow: none;
+      }
+      .card.accent,
+      .login-card {
+        border-left-style: solid;
+      }
+      .btn,
+      .btn-primary {
+        border-radius: 999px;
+        border-style: solid;
+      }
+      /* Controls stay solid; dashed is for cards and tiles, as on the rest of the site. */
+      .seg,
+      select,
+      input[type="search"] {
+        border-style: solid;
+        border-color: var(--border-light);
+      }
+      .seg button + button {
+        border-left-style: solid;
+      }
+      .btn-primary:hover {
+        background: var(--hover);
+        border-color: var(--hover);
+      }
+      .seg button[aria-pressed="true"] {
+        border-radius: 4px;
       }
     </style>
   </head>
