@@ -1,6 +1,6 @@
 [
-  { "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Eyes on Heritage Hackathon 2026</strong> at the Natural History Museum Abu Dhabi (AED 8,000 ≈ USD 2,180)." },
-  { "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Amazon Experience Hackathon 2026</strong> at Khalifa University, Abu Dhabi (AED 9,000 ≈ USD 2,450)." },
+  { "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Eyes on Heritage Hackathon 2026</strong> at the Natural History Museum Abu Dhabi; awarded AED 8,000 (≈ USD 2,180)." },
+  { "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Amazon Experience Hackathon 2026</strong> at Khalifa University, Abu Dhabi; awarded AED 9,000 (≈ USD 2,450)." },
   { "date": "Jun 2026", "isNew": true, "text": "Won the <strong>Cursor x Evoost AI Hackathon 2026</strong> with <a href=\"https://github.com/Salah-P/CursorHackathon-\" target=\"_blank\" rel=\"noopener\"><em>Hakim AI</em></a>." },
   { "date": "Apr 2026", "isNew": true, "text": "<em>CASS</em> (Nvidia → AMD transpilation) accepted at the <strong>ACL 2026 Main Conference</strong>." },
   { "date": "Mar 2026", "isNew": true, "text": "Submitted <em>PERSUADE</em> — a debate arena for auditing persuasion in LLMs." },
@@ -9,7 +9,7 @@
   { "date": "Aug 2025", "text": "Secured <strong>3rd place</strong> at <strong>MICCAI BraTS 2025 — SSA Track</strong>." },
   { "date": "Jul 2025", "text": "Started as <strong>Research Engineer</strong> at MBZUAI with <a href=\"https://nilslukas.github.io\" target=\"_blank\" rel=\"noopener\">Dr. Nils Lukas</a>, building Etihad Airways' conversational agent." },
   { "date": "May 2025", "text": "<em>Guaranteed Guess</em> (CISC → RISC transpilation) accepted at <strong>EMNLP 2025</strong>; completed <strong>MSc (Research) in Computer Vision</strong> at MBZUAI." },
-  { "date": "May 2025", "text": "Won <strong>1st place</strong> at <strong>TAMMathon 2025</strong> (AED 25,000 ≈ USD 6,800)." },
+  { "date": "May 2025", "text": "Won <strong>1st place</strong> at <strong>TAMMathon 2025</strong>; awarded AED 25,000 (≈ USD 6,800)." },
   { "date": "Feb 2025", "text": "<em>SALT</em> (parameter-efficient fine-tuning via singular-value adaptation) accepted at <strong>BMVC 2025</strong>." },
   { "date": "Nov 2024", "text": "<em>Optimizing Brain Tumor Segmentation with MedNeXt</em> accepted at <strong>MICCAI 2024</strong> Workshop; <strong>3rd place</strong> at BraTS 2024 SSA & Pediatrics Challenge." },
   { "date": "May 2024", "text": "Joined <strong>Etisalat</strong> as a Machine Learning Engineer, building a RAG chatbot over Excel datasets." },
