@@ -118,3 +118,7 @@ If the repo name differs from `sarim-mbzuai.github.io`, update `site:` in `astro
 - Pages: Home, Publications, Experience, Projects, Awards
 - Populated `publications.json`, `experience.json`, `projects.json`, `awards.json` from CV
 - Real portrait at `public/images/profile.jpg` (center-cropped square, 800×800, ~48 KB)
+
+## Visit tracker
+
+A self-hosted visitor log (Cloudflare Worker + D1, free tier) with a private dashboard at `/visitors/`. Setup, privacy notes and commands are in [visit-tracker/README.md](visit-tracker/README.md).

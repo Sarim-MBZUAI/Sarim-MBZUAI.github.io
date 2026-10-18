@@ -1,10 +1,14 @@
 ---
+import VisitTracker from '../components/VisitTracker.astro';
+import tracker from '../data/visit-tracker.json';
 interface Props {
   title: string;
   description?: string;
 }
 
 const { title, description = "Sarim Hashmi — Research Engineer at MBZUAI. Secure, private, and strategic machine learning, with a focus on the security of LLM agents that use retrieval, memory, and tools." } = Astro.props;
+// Self-hosted visit tracker (see visit-tracker/README.md). In `npm run dev` it reports to a local Worker on :8787.
+const trackerEndpoint = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled && tracker.url ? tracker.url : '';
 ---
 
 <!doctype html>
@@ -27,6 +31,7 @@ const { title, description = "Sarim Hashmi — Research Engineer at MBZUAI. Secu
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>
+    {trackerEndpoint && <VisitTracker endpoint={trackerEndpoint} />}
     {import.meta.env.PROD && (
       <script
         is:inline
