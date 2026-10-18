@@ -73,10 +73,12 @@ if (local) {
   fs.writeFileSync(file, `${keep.join("\n")}\n`);
   console.log("Saved the password hash to visit-tracker/.dev.vars (restart `npm run dev` to use it).");
 } else {
+  // On Windows npx is a .cmd file, which Node can only start through a shell.
   const result = spawnSync("npx", ["wrangler", "secret", "put", "DASHBOARD_PASSWORD_HASH"], {
     cwd: root,
     input: value,
     stdio: ["pipe", "inherit", "inherit"],
+    shell: process.platform === "win32",
   });
   if (result.status !== 0) fail("Could not save the secret to Cloudflare. Are you logged in (npx wrangler login)?");
   console.log("Password set. Everyone signed in to the dashboard has been signed out.");

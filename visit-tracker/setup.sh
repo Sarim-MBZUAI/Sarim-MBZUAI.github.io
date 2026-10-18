@@ -36,7 +36,8 @@ fi
 node -e 'const fs=require("fs");const f="wrangler.toml";fs.writeFileSync(f,fs.readFileSync(f,"utf8").replace(/database_id = "[^"]*"/,`database_id = "${process.argv[1]}"`))' "$DB_ID"
 
 step "4/6  Creating the tables…"
-npx wrangler d1 migrations apply visits --remote
+# stdin from /dev/null makes wrangler non-interactive, so it applies the migrations without asking.
+npx wrangler d1 migrations apply visits --remote </dev/null
 
 step "5/6  Deploying the Worker…"
 echo "A new Cloudflare account is asked to pick a workers.dev subdomain once (e.g. your name); answer yes."
@@ -50,7 +51,10 @@ if command -v script >/dev/null 2>&1; then
     script -q -c "npx wrangler deploy" "$DEPLOY_LOG" || true
   fi
 else
-  npx wrangler deploy 2>&1 | tee "$DEPLOY_LOG" || true
+  # Piping wrangler makes it non-interactive, and it would then answer "no" to registering a workers.dev
+  # subdomain. So deploy interactively first, then once more (non-interactively) just to capture the URL.
+  npx wrangler deploy || true
+  npx wrangler deploy </dev/null 2>&1 | tee "$DEPLOY_LOG" || true
 fi
 # Match this Worker's own address (https://<name>.<subdomain>.workers.dev), not the bare subdomain
 # that wrangler also prints when a new subdomain is registered.
