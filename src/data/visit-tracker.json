@@ -1,0 +1,5 @@
+{
+  "_comment": "Self-hosted visit tracker. `url` is your Cloudflare Worker address; visit-tracker/setup.sh fills it in. Set `enabled` to false to switch tracking off.",
+  "enabled": true,
+  "url": ""
+}
