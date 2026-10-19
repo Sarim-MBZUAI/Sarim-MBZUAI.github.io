@@ -18,7 +18,7 @@ const renderInline = (s: string) =>
 const bullets = Array.isArray(description) ? description.map(renderInline) : null;
 ---
 
-<article class="project-item">
+<article class="project-item" data-vt-context={title}>
   <div class="project-header">
     <h3 class="project-title">
       {link ? (

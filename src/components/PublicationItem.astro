@@ -38,7 +38,7 @@ if (links?.blog) linkItems.push({ label: 'Blog', url: links.blog });
 if (links?.website) linkItems.push({ label: 'Website', url: links.website });
 ---
 
-<article class:list={["publication-item", { "no-thumbnail": !thumbnail }]}>
+<article class:list={["publication-item", { "no-thumbnail": !thumbnail }]} data-vt-context={title}>
   {thumbnail && (
     <img src={thumbnail} alt={`Thumbnail for ${title}`} class="publication-thumbnail" loading="lazy" />
   )}
