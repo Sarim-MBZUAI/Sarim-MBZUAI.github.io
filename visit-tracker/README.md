@@ -27,12 +27,15 @@ One row per page view:
 | Network hostname       | `eduroam-12.wlan.cam.ac.uk` → domain `cam.ac.uk` (reverse DNS)            |
 | Network type           | University / research, ISP / company, or cloud / VPN / proxy              |
 | Location               | City, region, postcode, country, latitude/longitude                       |
-| Page                   | Path and title, and how long it was actually on screen                    |
+| Page                   | Path and title, how long it was on screen and how much of that was active |
+| What they did          | Papers and sections read (with time), downloads, links, videos, figures   |
+| Whole visits           | Each visitor's pages in order, and whether they came on earlier days    |
+| Problems               | Broken links (404 pages, with where the link was) and JavaScript errors   |
 | Came from              | Referring site (Google Scholar, LinkedIn, arXiv, …) and `utm_source`      |
 | Device                 | Desktop / mobile / tablet, OS, browser, screen size, language             |
 | IP address             | Kept for 365 days, then erased automatically (configurable)               |
 
-It never records names, emails, or anything typed on the site.
+It never records names, emails, mouse movements or anything typed on the site (forms are recorded only by name when sent; search boxes not at all).
 
 ## How it knows it was a university
 
@@ -50,6 +53,14 @@ Three signals, combined:
 
 **Be honest with yourself about the limits.** A professor reading your site from home shows as their home ISP, not their university. A VPN shows as the VPN provider and is tagged *cloud / VPN / proxy* so it does not pollute the map. Location is city-level and can be a city off for mobile networks. Visitors with tracker blockers may not be counted at all.
 
+## Which paper did they read?
+
+Every publication and experience entry on the site is marked with `data-vt-context="<title>"`. While that entry is in the middle of the screen and the visitor is active (scrolling, moving the mouse, typing), the seconds are credited to that title, and any click inside it (the PDF, the code link, arXiv) is recorded as "Downloaded … · <title>" or "Opened arxiv.org · <title>". The dashboard then lists papers by how often and how long they were read. On other pages, the h2/h3 heading above the middle of the screen is used instead. To tag anything else, add `data-vt-context` (reading time and clicks) or `data-vt-section` (reading time only) to its container, or `data-vt-event="Name"` to a single link or button.
+
+<p align="center">
+  <img src="docs/reading.png" alt="Reading: each paper with how many visitors read it and the average time spent on it" width="960">
+</p>
+
 ## The dashboard
 
 A private page at **`/visitors/`** on your own site. It is not linked anywhere and tells search engines not to index it. You sign in once per browser; the session lasts 30 days.
@@ -61,6 +72,12 @@ A private page at **`/visitors/`** on your own site. It is not linked anywhere a
 - **Filters**: last 24 hours, 7, 30, 90 days or 12 months; *universities & research only*; *hide cloud, VPN & proxies*; free-text search over organization, city, postcode, page and IP.
 - **Click anything** (an organization, a city, a country, a page, a referrer, a circle on the map) to filter everything else to it.
 - **All pages by this visitor** shows one person's path through your site.
+- **What visitors did**: *actions* (downloads, links to other sites, videos, figures, …), *reading* (each paper and section, with the average time spent on it), *scrolling*, and *problems* (broken links to the site, with where the link was, and JavaScript errors). Click a row to see the visits where it happened.
+- **Show details** under a visit lists everything the visitor did on that page, the other pages of the same visit, and when they came before. **Whole visits** at the top of "every visit" lists visits instead of single page views.
+<p align="center">
+  <img src="docs/activity.png" alt="What visitors did: downloads, links to other sites, email clicks" width="960">
+</p>
+
 - **Reloads are merged**: opening the same page again within 30 minutes updates the visit instead of adding a new row.
 - **Live count** of visitors in the last five minutes.
 - **Export CSV** of every visit in the current filter.
@@ -68,7 +85,7 @@ A private page at **`/visitors/`** on your own site. It is not linked anywhere a
 - **Dark mode**, following your site's theme.
 
 <p align="center">
-  <img src="docs/visits.png" alt="Every visit: time, organization, location, page, referrer, device, time on page and IP address" width="960">
+  <img src="docs/visits.png" alt="Every visit, with one visit opened: what they did on the page, the other pages of the same visit, and when this visitor came before" width="960">
 </p>
 
 <p align="center">
