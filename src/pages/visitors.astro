@@ -1353,6 +1353,18 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
       .seg button[aria-pressed="true"] {
         border-radius: 4px;
       }
+      /* The visit list keeps growing: keep it to roughly eight rows and scroll the rest, with the header staying put. */
+      #visits-wrap {
+        max-height: min(72vh, 760px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      #visits-wrap thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: var(--card);
+      }
     </style>
   </head>
   <body>
@@ -1557,7 +1569,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
           </div>
         </div>
         <p class="card-note" id="visits-sub"></p>
-        <div class="table-wrap">
+        <div class="table-wrap" id="visits-wrap">
           <table class="visits-table" id="views-table">
             <thead>
               <tr>
