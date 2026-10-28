@@ -163,7 +163,7 @@
     var KINDS = [
       { ch: 'o', lr: 0.0018, name: 'sgd' },                              /* sgd */
       { ch: '@', lr: 0.0018, mom: 0.88, name: 'momentum' },              /* momentum */
-      { ch: '#', lr: 0.0028, b1: 0.9, b2: 0.999, name: 'adam' }          /* adam */
+      { ch: '#', lr: 0.009, b1: 0.9, b2: 0.999, name: 'adam' }           /* adam: its step is ~lr per axis whatever the slope, so lr is a speed, not a gain */
     ];
     function runner(sx, sy, k) { return { sx: sx, sy: sy, k: k, vx: 0, vy: 0, mx: 0, my: 0, wx: 0, wy: 0, n: 0, trail: [], still: 0, age: 0 }; }
     function trioAt(sx, sy) { return { r: [runner(sx, sy, 0), runner(sx, sy, 1), runner(sx, sy, 2)] }; }
