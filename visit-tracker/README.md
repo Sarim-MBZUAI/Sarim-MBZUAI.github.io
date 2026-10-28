@@ -29,6 +29,9 @@ One row per page view:
 | Location               | City, region, postcode, country, latitude/longitude                       |
 | Page                   | Path and title, how long it was on screen and how much of that was active |
 | What they did          | Papers and sections read (with time), downloads, links, videos, figures   |
+| Papers seen            | Which papers were on screen for at least a second, read or not            |
+| Clicks                 | Where on the page each click landed, clicks on things that aren't links, and clicks repeated in frustration |
+| AI summary             | Optional: a sentence or two on what each visit was after, and who the visitor might be, written by Gemini once the visit is over |
 | Whole visits           | Each visitor's pages in order, and whether they came on earlier days    |
 | Problems               | Broken links (404 pages, with where the link was) and JavaScript errors   |
 | Came from              | Referring site (Google Scholar, LinkedIn, arXiv, …) and `utm_source`      |
@@ -72,6 +75,12 @@ A private page at **`/visitors/`** on your own site. It is not linked anywhere a
 - **Filters**: last 24 hours, 7, 30, 90 days or 12 months; *universities & research only*; *hide cloud, VPN & proxies*; free-text search over organization, city, postcode, page and IP.
 - **Click anything** (an organization, a city, a country, a page, a referrer, a circle on the map) to filter everything else to it.
 - **All pages by this visitor** shows one person's path through your site.
+- **Why people came**: each visit's likely reason (citing a paper, getting a paper, looking for code, trying to reach you, checking your background, reading your research, …), worked out from what the visitor did. Hover a reason for the evidence; click one to see those visits, each told in one line.
+- **Papers**: for each paper, how many people it came into view for, read it (and for how long), opened its links or code, and clicked its title expecting a link.
+- **How visitors moved through the site**: first pages (and how many left right away), where they went from each page, last pages, and whole paths.
+- **Worth a closer look**: universities, labs and companies whose network names them and who did more than glance: cited, downloaded, got in touch, read seriously or came back. Strongest interest first.
+- **Came from** groups where visits started by kind of site: search engine, research site (Scholar, arXiv, Semantic Scholar, …), AI assistant (ChatGPT, Perplexity, …), code, social, email, direct.
+- **Click map**: where visitors clicked on a page, drawn over the page as it looks now, for computers or phones.
 - **What visitors did**: *actions* (downloads, links to other sites, videos, figures, …), *reading* (each paper and section, with the average time spent on it), *scrolling*, and *problems* (broken links to the site, with where the link was, and JavaScript errors). Click a row to see the visits where it happened.
 - **Show details** under a visit lists everything the visitor did on that page, the other pages of the same visit, and when they came before. **Whole visits** at the top of "every visit" lists visits instead of single page views.
 <p align="center">
@@ -91,6 +100,22 @@ A private page at **`/visitors/`** on your own site. It is not linked anywhere a
 <p align="center">
   <img src="docs/dashboard-dark.png" alt="The same dashboard in dark mode" width="600">
 </p>
+
+## AI summaries (optional)
+
+With a Gemini API key, the Worker asks Gemini (the first of `GEMINI_MODELS` in `wrangler.toml` that isn't busy) to write, for each finished visit, what the visitor was probably trying to do and who they might be. They appear marked "AI" in the dashboard: in "why people came", "worth a closer look", the list of whole visits, and at the top of each opened visit.
+
+- Each visit is sent **once**, after it is over (30 minutes without activity), and never again; visits where nothing happened (one page, under 10 seconds, no actions) are skipped without a call.
+- It runs with the hourly cron, at most `SUMMARIES_PER_RUN` visits an hour (8, so at most 192 calls a day). When a model can't answer, the next one is asked; when none can, the visit is tried again the next hour.
+- Gemini sees each visit's network name, city, device, where the visitor came from, and their pages and actions; never IP addresses, hostnames or visitor ids. On Gemini's free tier, Google may use what it is sent to improve its products.
+
+It is **off** until you add the key. To switch it on, get a key at https://aistudio.google.com/apikey and save it as a Worker secret (never stored in the repository or sent to the dashboard):
+
+```bash
+cd visit-tracker && npx wrangler secret put GEMINI_API_KEY
+```
+
+To switch it off, delete the secret (`npx wrangler secret delete GEMINI_API_KEY`). For local testing, put `GEMINI_API_KEY=…` in a `.env` file at the repository root (git ignores it) and start the local Worker with `npx wrangler dev --env-file ../.env`.
 
 ## A public map for your visitors
 
@@ -142,7 +167,7 @@ Each page view costs two Worker requests and at most three database writes. Clou
 
 IP addresses are personal data under GDPR (EU visitors) and the UAE's PDPL. Add a short notice to your site, for example in the footer or on the contact page:
 
-> This site keeps a basic visit log (time, page, approximate location and network, from your IP address) to understand its audience. No cookies are used and nothing is shared with third parties.
+> This site keeps a visit log (time, page, approximate location and network from your IP address, and what you click or read on the site) to understand its audience. No cookies are used and nothing is shared with third parties.
 
 The tracker sets no cookies. IP addresses are erased after `IP_RETENTION_DAYS` (in `wrangler.toml`); everything else is kept. Bots, crawlers and headless browsers are dropped on purpose.
 

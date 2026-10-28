@@ -125,6 +125,9 @@ Each page view is reported to a small Cloudflare Worker, which stores it in a D1
 | Page                     | Path and title, time on screen, time actively reading, scroll depth        |
 | What they did            | Which paper or section they read and for how long, downloads, links, email clicks, forms, videos, copied text |
 | Whole visits             | The pages of one visit in order, and whether the visitor came before       |
+| Papers seen              | Which papers scrolled into view, read or not                               |
+| Clicks                   | Where on the page people click (click map), dead clicks, rage clicks       |
+| AI summary (optional)    | What each visit was after and who the visitor might be, written by Gemini  |
 | Problems                 | 404 pages reached through broken links, JavaScript errors                  |
 | Came from                | Referring site (Scholar, LinkedIn, arXiv, …) and `utm_source`              |
 | Device                   | Desktop / mobile / tablet, OS, browser, screen size, language              |
@@ -168,10 +171,10 @@ Everything below lives in the Cloudflare account that ran the setup (see **Worke
 | Worker name                  | `visit-tracker`                                                   |
 | Worker URL                   | `https://visit-tracker.sarim-mbzuai.workers.dev`                  |
 | D1 database                  | `visits` (id in `visit-tracker/wrangler.toml`)                    |
-| Secret                       | `DASHBOARD_PASSWORD_HASH`: salted PBKDF2 hash of the dashboard password; the password itself is stored nowhere |
-| Variables (`wrangler.toml`)  | `ALLOWED_ORIGINS = https://sarim-mbzuai.github.io`, `IP_RETENTION_DAYS = 365` |
+| Secrets                      | `DASHBOARD_PASSWORD_HASH`: salted PBKDF2 hash of the dashboard password; the password itself is stored nowhere. `GEMINI_API_KEY` (optional, not set): switches on AI summaries of finished visits |
+| Variables (`wrangler.toml`)  | `ALLOWED_ORIGINS = https://sarim-mbzuai.github.io`, `IP_RETENTION_DAYS = 365`, `GEMINI_MODELS`, `SUMMARIES_PER_RUN = 8` |
 | Rate limits                  | 60 visit events per minute per IP; 5 sign-in attempts per minute per IP |
-| Cron                         | hourly (`17 * * * *`): refreshes the public map cache and erases IP addresses older than the retention period |
+| Cron                         | hourly (`17 * * * *`): refreshes the public map cache, erases IP addresses older than the retention period, and (with a Gemini key) summarizes finished visits |
 | Compatibility date           | `2026-05-01` (the newest the pinned wrangler supports)            |
 
 The Worker's endpoints:
@@ -182,7 +185,7 @@ The Worker's endpoints:
 | `POST /leave`     | pages on an allowed origin            | time on page, scroll, activity, reading time       |
 | `GET /map`        | anyone (CORS `*`)                     | city-level counts for the contact-page map         |
 | `POST /api/login` | anyone, rate limited                  | password → 30-day token                            |
-| `GET /api/*`      | holders of a valid token              | summary, visits, sessions, events, visitor history, CSV export, network labels |
+| `GET /api/*`      | holders of a valid token              | summary, visits, sessions, insights, click map, events, visitor history, CSV export, network labels |
 
 Only `ALLOWED_ORIGINS` may report visits; a request without that `Origin` header is refused with 403. Forged requests are still possible with a script, which is why the rate limit exists.
 
@@ -278,6 +281,12 @@ The tracker sets no cookies. The dashboard keeps its sign-in token and the "don'
 ---
 
 ## Changelog
+
+**2026-10-28** — Insights, click map, AI summaries
+- Dashboard: why people came, per-paper funnel (seen → read → links), how visitors moved through the site, "worth a closer look", referrer kinds, click map, whole-visit stories
+- Snippet: papers that scrolled into view, click positions, dead and rage clicks
+- Worker: `/api/insights`, `/api/clicks`, optional Gemini summaries of finished visits (`summaries` table, migration 0005; needs the `GEMINI_API_KEY` secret)
+- Visit list scrolls inside a fixed-height box instead of growing the page
 
 **2026-10-19** — Activity tracking
 - Each page view now records active time, scroll depth, the paper or section being read (publications and experience entries carry `data-vt-context`), downloads, outbound links, email clicks, forms, videos, copied text, 404s and JavaScript errors
