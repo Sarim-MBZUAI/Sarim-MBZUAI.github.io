@@ -45,6 +45,19 @@ const trackerEndpoint = import.meta.env.DEV ? 'http://localhost:8787' : tracker.
     <div class="container">
       <slot />
     </div>
+    <!-- Lightbox for publication GIFs -->
+    <div class="lightbox" id="lightbox" hidden><img alt="" /></div>
+    <script is:inline>
+      (function () {
+        var box = document.getElementById('lightbox'), img = box.querySelector('img');
+        document.addEventListener('click', function (e) {
+          var t = e.target.closest('.publication-thumbnail');
+          if (t) { img.src = t.src; img.alt = t.alt; box.hidden = false; document.body.style.overflow = 'hidden'; return; }
+          if (!box.hidden && e.target.closest('#lightbox')) { box.hidden = true; img.src = ''; document.body.style.overflow = ''; }
+        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) { box.hidden = true; img.src = ''; document.body.style.overflow = ''; } });
+      })();
+    </script>
     <!-- Ambient proximity-graph canvas backdrop (theme-aware, self-booting) -->
     <script is:inline src="/assets/js/bg.js"></script>
     <!-- ASCII scenes -->

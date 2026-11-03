@@ -325,7 +325,7 @@ p a:hover, .about-content a:hover {
 
 .publication-item {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: var(--space-xl);
   padding-bottom: var(--space-xl);
   border-bottom: 1px dashed var(--border);
@@ -341,17 +341,52 @@ p a:hover, .about-content a:hover {
 }
 
 .publication-thumbnail {
-  width: 140px;
-  height: 100px;
+  width: 240px;
+  aspect-ratio: 16 / 9;
+  height: auto;
   object-fit: cover;
   border-radius: var(--border-radius);
-  background: var(--bg-alt);
-  filter: saturate(0.7) sepia(0.1);
-  transition: filter 0.3s ease;
+  border: 1px solid var(--border);
+  background: #f5f7fb;
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .publication-thumbnail:hover {
-  filter: saturate(0.85) sepia(0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .publication-thumbnail {
+  border-color: #2a2a2a;
+  filter: brightness(0.92);
+}
+
+/* Lightbox for the animated paper overviews */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 10, 10, 0.78);
+  cursor: zoom-out;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox img {
+  max-width: min(1200px, 100%);
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #f5f7fb;
 }
 
 .publication-content h3 {
@@ -428,13 +463,12 @@ p a:hover, .about-content a:hover {
 
 @media (max-width: 600px) {
   .publication-item {
-    grid-template-columns: 100px 1fr;
-    gap: var(--space-md);
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
   }
 
   .publication-thumbnail {
-    width: 100px;
-    height: 75px;
+    width: 100%;
   }
 
   .publication-content h3 {

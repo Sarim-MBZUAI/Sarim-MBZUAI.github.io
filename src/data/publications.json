@@ -1,122 +1,218 @@
 [
   {
     "title": "Certification of Real Images through Calibrated Content Authentication",
-    "authors": ["Sarim Hashmi", "Abdelrahman Elsayed", "Mohammed Talha Alam", "Samuele Poppi", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi",
+      "Abdelrahman Elsayed",
+      "Mohammed Talha Alam",
+      "Samuele Poppi",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "October",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2610.05870"
-    }
+    },
+    "thumbnail": "/images/publications/certification.gif"
   },
   {
     "title": "AdvSim2Real: Training Web Agents Against Adaptive Prompt Injection in a Web World Model",
-    "authors": ["Sarim Hashmi", "Mukul Ranjan", "Kshitij Mishra", "Mikhail Kuznetsov", "Praneeth Vepakomma", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi",
+      "Mukul Ranjan",
+      "Kshitij Mishra",
+      "Mikhail Kuznetsov",
+      "Praneeth Vepakomma",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2610.08773"
-    }
+    },
+    "thumbnail": "/images/publications/advsim2real.gif"
   },
   {
     "title": "Noise Out, Bias In: Targeted Bias Injection in Diffusion Language Models via Closed-Loop Activation Steering",
-    "authors": ["Sarim Hashmi*", "Mukul Ranjan*", "Abdelrahman Elsayed", "Muhammad Umer Sheikh", "Fahad Shamshad", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi*",
+      "Mukul Ranjan*",
+      "Abdelrahman Elsayed",
+      "Muhammad Umer Sheikh",
+      "Fahad Shamshad",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2610.05894"
-    }
+    },
+    "thumbnail": "/images/publications/dlm_bias.gif"
   },
   {
     "title": "GROVE: Benchmarking and Training LLM Agents to Persuade",
-    "authors": ["Sarim Hashmi*", "Kshitij Mishra*", "Tair Djanibekov", "Dushyant Singh Chauhan", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi*",
+      "Kshitij Mishra*",
+      "Tair Djanibekov",
+      "Dushyant Singh Chauhan",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
     "featured": true,
-    "links": {}
+    "links": {},
+    "thumbnail": "/images/publications/grove.gif"
   },
   {
     "title": "SIRA: Self-Improving Recommendation Agents under Demand Shifts",
-    "authors": ["Kshitij Mishra", "Sarim Hashmi", "Dushyant Singh Chauhan", "Martin Takáč", "Salem Lahlou", "Nils Lukas"],
+    "authors": [
+      "Kshitij Mishra",
+      "Sarim Hashmi",
+      "Dushyant Singh Chauhan",
+      "Martin Takáč",
+      "Salem Lahlou",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "September",
     "featured": true,
-    "links": {}
+    "links": {},
+    "thumbnail": "/images/publications/sira.gif"
   },
   {
     "title": "CASS: Nvidia to AMD Transpilation with Data, Models, and Benchmark",
-    "authors": ["Ahmed Heakl", "Sarim Hashmi*", "Gustavo Bertolo Stahl*", "Seung Hun Eddie Han", "Mukul Ranjan", "Arina Kharlamova", "Salman Khan", "Abdulrahman Mahmoud"],
+    "authors": [
+      "Ahmed Heakl",
+      "Sarim Hashmi*",
+      "Gustavo Bertolo Stahl*",
+      "Seung Hun Eddie Han",
+      "Mukul Ranjan",
+      "Arina Kharlamova",
+      "Salman Khan",
+      "Abdulrahman Mahmoud"
+    ],
     "venue": "ACL 2026",
     "year": 2026,
     "month": "April",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2505.16968"
-    }
+    },
+    "thumbnail": "/images/publications/cass.gif"
   },
   {
     "title": "PERSUADE: A Debate Arena for Benchmarking, Optimizing, and Auditing Persuasion in Language Models",
-    "authors": ["Sarim Hashmi", "Samuele Poppi", "Salem Lahlou", "Martin Takáč", "Kshitij Mishra", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi",
+      "Samuele Poppi",
+      "Salem Lahlou",
+      "Martin Takáč",
+      "Kshitij Mishra",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2026,
     "month": "March",
     "featured": true,
-    "links": {}
+    "links": {},
+    "thumbnail": "/images/publications/persuade.gif"
   },
   {
     "title": "Robust and Calibrated Detection of Authentic Multimedia Content",
-    "authors": ["Sarim Hashmi", "Abdelrahman Elsayed", "Mohammed Talha Alam", "Samuele Poppi", "Nils Lukas"],
+    "authors": [
+      "Sarim Hashmi",
+      "Abdelrahman Elsayed",
+      "Mohammed Talha Alam",
+      "Samuele Poppi",
+      "Nils Lukas"
+    ],
     "venue": "Under review",
     "year": 2025,
     "month": "November",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2512.15182"
-    }
+    },
+    "thumbnail": "/images/publications/robust.gif"
   },
   {
     "title": "Guaranteed Guess: A Language Modeling Approach for CISC-to-RISC Transpilation with Testing Guarantees",
-    "authors": ["Ahmed Heakl", "Sarim Hashmi", "Chaimaa Abi", "Celine Lee", "Abdulrahman Mahmoud"],
+    "authors": [
+      "Ahmed Heakl",
+      "Sarim Hashmi",
+      "Chaimaa Abi",
+      "Celine Lee",
+      "Abdulrahman Mahmoud"
+    ],
     "venue": "EMNLP 2025",
     "year": 2025,
     "month": "May",
     "featured": false,
     "links": {
       "paper": "https://arxiv.org/pdf/2506.14606"
-    }
+    },
+    "thumbnail": "/images/publications/gg.gif"
   },
   {
     "title": "SALT: Parameter-Efficient Fine-Tuning via Singular Value Adaptation with Low-Rank Transformation",
-    "authors": ["Sarim Hashmi*", "Abdelrahman Elsayed*", "Mohammed Elseiagy", "Hu Wang", "Mohammad Yaqub", "Ibrahim Almakky"],
+    "authors": [
+      "Sarim Hashmi*",
+      "Abdelrahman Elsayed*",
+      "Mohammed Elseiagy",
+      "Hu Wang",
+      "Mohammad Yaqub",
+      "Ibrahim Almakky"
+    ],
     "venue": "BMVC 2025",
     "year": 2025,
     "month": "February",
     "featured": true,
     "links": {
       "paper": "https://arxiv.org/pdf/2503.16055"
-    }
+    },
+    "thumbnail": "/images/publications/salt.gif"
   },
   {
     "title": "Language and Planning in Robotic Navigation: A Multilingual Evaluation of State-of-the-Art Models",
-    "authors": ["Malak Mansour*", "Ahmed Aly*", "Bahey Tharwat*", "Sarim Hashmi", "Dong An", "Ian Reid"],
+    "authors": [
+      "Malak Mansour*",
+      "Ahmed Aly*",
+      "Bahey Tharwat*",
+      "Sarim Hashmi",
+      "Dong An",
+      "Ian Reid"
+    ],
     "venue": "AAAI Workshop 2025",
     "year": 2025,
     "month": "January",
     "featured": false,
     "links": {
       "paper": "https://arxiv.org/pdf/2501.05478"
-    }
+    },
+    "thumbnail": "/images/publications/navigation.gif"
   },
   {
     "title": "Optimizing Brain Tumor Segmentation with MedNeXt: BraTS 2024 SSA and Pediatrics",
-    "authors": ["Sarim Hashmi", "Juan Lugo", "Abdelrahman Elsayed", "Dinesh Saggurthi", "Mohammed Elseiagy", "Alikhan Nurkamal", "Jaskaran Walia", "Fadillah Adamsyah Maani", "Mohammad Yaqub"],
+    "authors": [
+      "Sarim Hashmi",
+      "Juan Lugo",
+      "Abdelrahman Elsayed",
+      "Dinesh Saggurthi",
+      "Mohammed Elseiagy",
+      "Alikhan Nurkamal",
+      "Jaskaran Walia",
+      "Fadillah Adamsyah Maani",
+      "Mohammad Yaqub"
+    ],
     "venue": "MICCAI Workshop 2024",
     "year": 2024,
     "month": "November",
@@ -124,6 +220,7 @@
     "links": {
       "paper": "https://arxiv.org/pdf/2411.15872",
       "website": "https://python-arch.github.io/BioMbz-Optimizing-Brain-Tumor-Segmentation-with-MedNeXt-BraTS-2024-SSA-and-Pediatrics/"
-    }
+    },
+    "thumbnail": "/images/publications/mednext.gif"
   }
 ]

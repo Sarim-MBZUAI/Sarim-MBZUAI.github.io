@@ -40,7 +40,7 @@ if (links?.website) linkItems.push({ label: 'Website', url: links.website });
 
 <article class:list={["publication-item", { "no-thumbnail": !thumbnail }]} data-vt-context={title}>
   {thumbnail && (
-    <img src={thumbnail} alt={`Thumbnail for ${title}`} class="publication-thumbnail" loading="lazy" />
+    <img src={thumbnail} alt={`Animated overview of ${title}`} class="publication-thumbnail" loading="lazy" title="Click to enlarge" />
   )}
   <div class="publication-content">
     <h3>
