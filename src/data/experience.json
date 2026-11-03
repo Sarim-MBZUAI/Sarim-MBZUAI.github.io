@@ -2,7 +2,7 @@
   {
     "title": "Research Engineer",
     "description": [
-      "Etihad AI: built ingestion and retrieval pipelines over Adobe and NICE data, extracted personas and planned journeys, integrated flight and return-journey APIs, and added real-time full-duplex voice via a streaming API.",
+      "<a href=\"https://www.etihad.com/en-ae/help\" target=\"_blank\" rel=\"noopener\">Etihad AI</a> (now live): built ingestion and retrieval pipelines over Adobe and NICE data, extracted personas and planned journeys, integrated flight and return-journey APIs, and added real-time full-duplex voice via a streaming API.",
       "Agent training: designed a UserLM simulator to emulate user behaviour for evaluation and stress-testing, and supported targeted supervised fine-tuning of the agent.",
       "[AdvSim2Real](https://arxiv.org/abs/2610.08773): world-model-based training for web agents robust to adaptive prompt injection, in collaboration with Amazon. First author; submitted.",
       "GROVE: benchmarked and trained LLM agents for persuasion. Equal contributor; submitted.",
