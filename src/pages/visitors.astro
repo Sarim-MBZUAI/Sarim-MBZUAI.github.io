@@ -21,7 +21,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
     <title>visitors | Sarim Hashmi</title>
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23BF8A54'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%2300F0FF'/%3E%3C/svg%3E"
     />
     <script is:inline>
       /* Apply the site's saved theme (or the system one) before first paint. */
@@ -38,7 +38,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     />
     <link
       rel="stylesheet"
@@ -1762,116 +1762,572 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         }
       }
 
-      /* ---------- site theme: same palette, fonts and dashed borders as public/styles/global.css ---------- */
+      /* ---------- cyberpunk theme: neon cyan and magenta on a night-city grid (dark), chrome and hot pink by day (light) ---------- */
       :root {
-        --bg: #f2f1ec;
-        --card: #f2f1ec;
-        --text: #171717;
-        --text-light: #6e6e6e;
-        --theme: #bf8a54;
+        --bg: #eef0f6;
+        --card: #ffffff;
+        --text: #10121f;
+        --text-light: #5a6480;
+        --theme: #d400a6;
         --theme-text: #ffffff;
-        --hover: #a67542;
-        --link: #a67542;
-        --divider: #171717;
-        --border-light: rgba(23, 23, 23, 0.14);
-        --focus: rgba(191, 138, 84, 0.22);
-        --row-hover: rgba(191, 138, 84, 0.08);
-        --shadow: rgba(0, 0, 0, 0);
-        --shadow-strong: rgba(0, 0, 0, 0.08);
-        --header-bg: rgba(242, 241, 236, 0.94);
-        --series: #bf8a54;
-        --series-active: #a67542;
-        --grid: rgba(23, 23, 23, 0.08);
-        --axis: rgba(23, 23, 23, 0.3);
+        --hover: #0097a7;
+        --link: #b0008a;
+        --divider: #10121f;
+        --border-light: rgba(16, 18, 31, 0.12);
+        --focus: rgba(212, 0, 166, 0.16);
+        --row-hover: rgba(0, 151, 167, 0.08);
+        --shadow: rgba(16, 18, 31, 0.05);
+        --shadow-strong: rgba(16, 18, 31, 0.18);
+        --header-bg: rgba(238, 240, 246, 0.9);
+        --footer-bg: transparent;
+        --footer-text: #5a6480;
+        --series: #d400a6;
+        --series-active: #0097a7;
+        --grid: rgba(16, 18, 31, 0.08);
+        --axis: rgba(16, 18, 31, 0.35);
+        --danger: #d1003d;
+        --dot-few: #f5a300;
+        --dot-some: #d400a6;
+        --dot-many: #d1003d;
+        --click: #0097a7;
+        --click-dead: #f5a300;
+        --click-rage: #d400a6;
+        /* Theme-only extras: the second neon, glows, the background grid and the scanlines. */
+        --neon-2: #0097a7;
+        --glow: rgba(212, 0, 166, 0.22);
+        --glow-strong: rgba(212, 0, 166, 0.4);
+        --glow-2: rgba(0, 151, 167, 0.3);
+        --grid-line: rgba(16, 18, 31, 0.06);
+        --scan: rgba(16, 18, 31, 0.03);
+        --haze-1: rgba(212, 0, 166, 0.08);
+        --haze-2: rgba(0, 151, 167, 0.1);
+        --glitch-a: #0097a7;
+        --glitch-b: #d400a6;
       }
       html[data-theme="dark"] {
-        --bg: #161616;
-        --card: #222222;
-        --text: #ebebeb;
-        --text-light: #888888;
-        --theme: #d4a574;
-        --theme-text: #161616;
-        --hover: #e5ba8f;
-        --link: #e5ba8f;
-        --divider: rgba(255, 255, 255, 0.2);
-        --border-light: rgba(255, 255, 255, 0.08);
-        --focus: rgba(212, 165, 116, 0.26);
-        --row-hover: rgba(212, 165, 116, 0.1);
-        --shadow: rgba(0, 0, 0, 0);
-        --shadow-strong: rgba(0, 0, 0, 0.3);
-        --header-bg: rgba(22, 22, 22, 0.94);
-        --series: #d4a574;
-        --series-active: #e5ba8f;
-        --grid: rgba(255, 255, 255, 0.07);
-        --axis: rgba(255, 255, 255, 0.2);
+        --bg: #05060d;
+        --card: #0b0e1c;
+        --text: #e6f7ff;
+        --text-light: #7f9bb3;
+        --theme: #00f0ff;
+        --theme-text: #05060d;
+        --hover: #ff2bd6;
+        --link: #00f0ff;
+        --divider: rgba(0, 240, 255, 0.38);
+        --border-light: rgba(0, 240, 255, 0.12);
+        --focus: rgba(0, 240, 255, 0.2);
+        --row-hover: rgba(255, 43, 214, 0.09);
+        --shadow: rgba(0, 240, 255, 0.07);
+        --shadow-strong: rgba(0, 0, 0, 0.65);
+        --header-bg: rgba(5, 6, 13, 0.82);
+        --footer-bg: transparent;
+        --footer-text: #5f7a92;
+        --series: #00f0ff;
+        --series-active: #ff2bd6;
+        --grid: rgba(0, 240, 255, 0.08);
+        --axis: rgba(0, 240, 255, 0.3);
+        --danger: #ff3b5c;
+        --dot-few: #fcee0a;
+        --dot-some: #ff2bd6;
+        --dot-many: #ff1f5a;
+        --click: #00f0ff;
+        --click-dead: #fcee0a;
+        --click-rage: #ff2bd6;
+        --neon-2: #ff2bd6;
+        --glow: rgba(0, 240, 255, 0.35);
+        --glow-strong: rgba(0, 240, 255, 0.6);
+        --glow-2: rgba(255, 43, 214, 0.45);
+        --grid-line: rgba(0, 240, 255, 0.05);
+        --scan: rgba(0, 0, 0, 0.2);
+        --haze-1: rgba(0, 240, 255, 0.1);
+        --haze-2: rgba(255, 43, 214, 0.12);
+        --glitch-a: #00f0ff;
+        --glitch-b: #ff2bd6;
       }
-      html,
+
+      /* ----- backdrop: a grid with two neon hazes, and scanlines over everything ----- */
+      html {
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(60vw 40vh at 0% 0%, var(--haze-1), transparent 70%),
+          radial-gradient(60vw 50vh at 100% 100%, var(--haze-2), transparent 70%),
+          linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size:
+          100% 100%,
+          100% 100%,
+          40px 40px,
+          40px 40px;
+        background-attachment: fixed;
+      }
       body {
-        font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: transparent;
+        font-family: "Rajdhani", "Segoe UI", system-ui, sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        pointer-events: none;
+        background: repeating-linear-gradient(0deg, transparent 0 2px, var(--scan) 2px 3px);
+      }
+      .mono,
+      .ev .t,
+      .tag,
+      th,
+      td.num,
+      .tile-label,
+      .tile-sub,
+      .card-sub,
+      .card-note,
+      .list-count,
+      .chart .tick,
+      details summary,
+      footer,
+      .field-hint {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .mono {
+        font-size: 0.78rem;
+      }
+      a:hover {
+        color: var(--hover);
+        text-decoration: none;
+        text-shadow: 0 0 10px var(--glow-2);
+      }
+      :focus-visible {
+        outline: 2px solid var(--neon-2);
+        outline-offset: 2px;
+      }
+
+      /* ----- navbar ----- */
+      .navbar {
+        border-bottom: 1px solid var(--border-light);
+        box-shadow: 0 1px 0 var(--divider), 0 8px 30px var(--shadow);
       }
       .brand {
-        font-family: "Instrument Serif", Georgia, serif;
-        font-weight: 400;
-        font-size: 1.5rem;
-        letter-spacing: 0.03em;
+        font-family: "Orbitron", "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
       }
       .brand span {
-        font-family: "Manrope", sans-serif;
-        font-size: 0.9rem;
-        letter-spacing: 0;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-transform: lowercase;
       }
+      .nav-links {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .nav-links a,
+      .nav-links .nav-button {
+        white-space: nowrap;
+      }
+      .nav-links a::before,
+      .nav-links .nav-button::before {
+        content: "> ";
+        color: var(--theme);
+      }
+      .theme-toggle {
+        border: 1px solid var(--border-light);
+        border-radius: 2px;
+      }
+      .theme-toggle:hover {
+        border-color: var(--hover);
+        box-shadow: 0 0 10px var(--glow-2);
+      }
+
+      /* ----- titles ----- */
       .post-title {
-        font-family: "Instrument Serif", Georgia, serif;
-        font-weight: 400;
-        font-style: italic;
-        font-size: clamp(2.4rem, 5vw, 3.2rem);
-        letter-spacing: 0.01em;
+        position: relative;
+        font-family: "Orbitron", "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: clamp(1.9rem, 4vw, 2.6rem);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-shadow: 0 0 6px var(--glow), 0 0 22px var(--glow-strong);
       }
-      .tile-value {
-        font-family: "Instrument Serif", Georgia, serif;
-        font-weight: 400;
-        font-size: 2.15rem;
-        letter-spacing: 0.01em;
+      /* Two offset copies in the other neons flash through a few times a minute: a glitch. */
+      .post-title::before,
+      .post-title::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        text-shadow: none;
+      }
+      .post-title::before {
+        color: var(--glitch-a);
+        transform: translate(-3px, 0);
+        animation: glitch-a 8s infinite;
+      }
+      .post-title::after {
+        color: var(--glitch-b);
+        transform: translate(3px, 0);
+        animation: glitch-b 8s infinite;
+      }
+      @keyframes glitch-a {
+        0%, 90%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); }
+        91% { opacity: 0.9; clip-path: inset(10% 0 55% 0); }
+        92.5% { opacity: 0.9; clip-path: inset(60% 0 15% 0); }
+        94% { opacity: 0.9; clip-path: inset(30% 0 50% 0); }
+        95% { opacity: 0; }
+      }
+      @keyframes glitch-b {
+        0%, 90.5%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); }
+        91.5% { opacity: 0.9; clip-path: inset(50% 0 20% 0); }
+        93% { opacity: 0.9; clip-path: inset(5% 0 70% 0); }
+        94.5% { opacity: 0.9; clip-path: inset(70% 0 5% 0); }
+        95.5% { opacity: 0; }
+      }
+      .post-description {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.82rem;
+        letter-spacing: 0.04em;
+      }
+      .post-description::before {
+        content: "// ";
+        color: var(--theme);
       }
       .card-head h2 {
-        letter-spacing: -0.01em;
+        font-family: "Orbitron", "Rajdhani", sans-serif;
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
       }
+      .card-head h2::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 12px;
+        margin-right: 10px;
+        background: var(--theme);
+        box-shadow: 0 0 8px var(--glow-strong);
+        vertical-align: -1px;
+      }
+      .card-sub,
+      .card-note,
+      .list-count,
+      .tile-sub {
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+      }
+      .card-note {
+        font-size: 0.74rem;
+      }
+
+      /* ----- cards and tiles: square, thin neon border, bracket corners, faint inner glow ----- */
       .card,
       .tile,
-      .login-card,
-      .seg,
-      .btn,
-      select,
-      input[type="search"] {
-        border-style: dashed;
-        border-radius: 6px;
-        box-shadow: none;
+      .login-card {
+        position: relative;
+        border: 1px solid var(--divider);
+        border-radius: 2px;
+        box-shadow: 0 0 22px var(--shadow), inset 0 0 50px var(--shadow);
+      }
+      .card::before,
+      .card::after,
+      .tile::before,
+      .tile::after,
+      .login-card::before,
+      .login-card::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--theme);
+        pointer-events: none;
+        filter: drop-shadow(0 0 4px var(--glow-strong));
+      }
+      .card::before,
+      .tile::before,
+      .login-card::before {
+        top: -1px;
+        left: -1px;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .card::after,
+      .tile::after,
+      .login-card::after {
+        right: -1px;
+        bottom: -1px;
+        border-left: 0;
+        border-top: 0;
       }
       .card.accent,
       .login-card {
-        border-left-style: solid;
+        border-left: 1px solid var(--divider);
+        box-shadow: 0 0 22px var(--shadow), inset 0 0 50px var(--shadow), inset 4px 0 0 var(--theme), inset 6px 0 14px var(--glow);
       }
+      .card.accent::before,
+      .login-card::before {
+        left: 3px;
+      }
+      .tile {
+        overflow: hidden;
+      }
+      .tile-label {
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .tile-value {
+        font-family: "Orbitron", "Rajdhani", sans-serif;
+        font-size: 1.7rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--theme);
+        text-shadow: 0 0 10px var(--glow), 0 0 28px var(--glow);
+      }
+      .tile .live-dot {
+        background: var(--neon-2);
+        box-shadow: 0 0 0 0 var(--glow-2);
+        animation: pulse 1.6s ease-out infinite;
+      }
+      .tile .live-dot.idle {
+        animation: none;
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 var(--glow-2); }
+        100% { box-shadow: 0 0 0 9px transparent; }
+      }
+      .empty {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+      }
+      .empty::before {
+        content: "[ ";
+        color: var(--theme);
+      }
+      .empty::after {
+        content: " ]";
+        color: var(--theme);
+      }
+
+      /* ----- controls: cut corners on buttons, square inputs with a neon focus ----- */
       .btn,
       .btn-primary {
-        border-radius: 999px;
-        border-style: solid;
+        border-radius: 0;
+        border: 1px solid var(--theme);
+        background: transparent;
+        color: var(--theme);
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+        transition: background 0.15s, color 0.15s, box-shadow 0.15s;
       }
-      /* Controls stay solid; dashed is for cards and tiles, as on the rest of the site. */
-      .seg,
-      select,
-      input[type="search"] {
-        border-style: solid;
-        border-color: var(--border-light);
+      .btn:hover {
+        background: var(--focus);
+        color: var(--theme);
+        border-color: var(--theme);
+        box-shadow: inset 0 0 18px var(--focus);
       }
-      .seg button + button {
-        border-left-style: solid;
+      .btn-primary {
+        background: var(--theme);
+        color: var(--theme-text);
+        box-shadow: inset 0 0 0 1px var(--theme);
       }
       .btn-primary:hover {
         background: var(--hover);
         border-color: var(--hover);
+        color: var(--theme-text);
+        box-shadow: inset 0 0 0 1px var(--hover);
+      }
+      /* The outline would be cut off with the corners, so focus is drawn inside. */
+      .btn:focus-visible {
+        outline: none;
+        box-shadow: inset 0 0 0 2px var(--neon-2);
+      }
+      #refresh[data-new="true"]::after {
+        border-radius: 0;
+        background: var(--neon-2);
+        color: #fff;
+        letter-spacing: 0.1em;
+      }
+      .seg,
+      select,
+      input[type="search"],
+      .field input,
+      .field select {
+        border: 1px solid var(--divider);
+        border-radius: 0;
+        background: color-mix(in srgb, var(--card) 70%, transparent);
+        box-shadow: none;
+      }
+      .seg button {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 0.84rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .seg button + button {
+        border-left: 1px solid var(--border-light);
       }
       .seg button[aria-pressed="true"] {
-        border-radius: 4px;
+        background: var(--theme);
+        color: var(--theme-text);
+        box-shadow: 0 0 14px var(--glow);
+      }
+      select:focus,
+      input[type="search"]:focus,
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--theme);
+        box-shadow: 0 0 0 1px var(--theme), 0 0 14px var(--glow);
+      }
+      input[type="search"]::placeholder {
+        color: var(--text-light);
+        opacity: 0.8;
+      }
+      .chip,
+      .chip.clear {
+        border-radius: 0;
+        border: 1px solid var(--theme);
+        background: var(--focus);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.74rem;
+      }
+      .chip:hover {
+        border-color: var(--hover);
+        box-shadow: 0 0 10px var(--glow-2);
+      }
+      .chip .x {
+        color: var(--neon-2);
+      }
+      .chip.clear {
+        border-color: var(--divider);
+        background: transparent;
+      }
+      .error {
+        border-radius: 0;
+        background: color-mix(in srgb, var(--danger) 10%, transparent);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.82rem;
+      }
+
+      /* ----- lists, bars, tags ----- */
+      .bar-row {
+        border-radius: 0;
+      }
+      .bar-row:hover {
+        box-shadow: inset 2px 0 0 var(--neon-2);
+      }
+      .bar-value {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.84rem;
+        color: var(--theme);
+      }
+      .bar-track {
+        height: 4px;
+        background: var(--border-light);
+      }
+      .bar-fill {
+        height: 4px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--theme), var(--neon-2));
+        box-shadow: 0 0 8px var(--glow);
+      }
+      .tag {
+        border: 1px solid var(--border-light);
+        border-radius: 2px;
+        padding: 0 5px;
+        background: transparent;
+        font-size: 0.6rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .tag.academic {
+        border-color: var(--theme);
+        background: var(--focus);
+        color: var(--theme);
+      }
+      .tag.bad {
+        border-color: var(--danger);
+        color: var(--danger);
+        background: transparent;
+      }
+      .ai-tag {
+        border-radius: 2px;
+      }
+      .dot-key {
+        border-color: var(--bg);
+        box-shadow: 0 0 6px currentColor;
+      }
+      .dot-key.few {
+        color: var(--dot-few);
+      }
+      .dot-key.some {
+        color: var(--dot-some);
+      }
+      .dot-key.many {
+        color: var(--dot-many);
+      }
+
+      /* ----- timeline ----- */
+      .chart .line {
+        stroke-width: 2;
+        filter: drop-shadow(0 0 5px var(--glow-strong));
+      }
+      .chart .area {
+        opacity: 0.14;
+      }
+      .chart .focus-dot {
+        stroke: var(--bg);
+        filter: drop-shadow(0 0 6px var(--glow-strong));
+      }
+      .chart .tick {
+        font-size: 10px;
+        letter-spacing: 0.04em;
+      }
+      details summary {
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* ----- tables ----- */
+      th {
+        font-size: 0.66rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--divider);
+      }
+      table {
+        font-size: 0.9rem;
+      }
+      tbody tr:hover td:first-child,
+      tbody tr:hover td:last-child {
+        border-radius: 0;
+      }
+      tbody tr:hover td:first-child {
+        box-shadow: inset 2px 0 0 var(--neon-2);
+      }
+      .visits-table tr {
+        border-radius: 0;
+      }
+      .rows-scroll th,
+      #visits-wrap thead th {
+        background: var(--card);
       }
       /* The visit list keeps growing: keep it to roughly eight rows and scroll the rest, with the header staying put. */
       #visits-wrap {
@@ -1883,7 +2339,146 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         position: sticky;
         top: 0;
         z-index: 2;
+      }
+
+      /* ----- tooltip, map popup, dialog ----- */
+      .tooltip,
+      .maplibregl-popup-content {
+        border-radius: 0;
+        border: 1px solid var(--theme);
+        box-shadow: 0 0 0 1px var(--bg), 0 0 20px var(--glow), 0 12px 30px var(--shadow-strong);
+        font-size: 0.82rem;
+      }
+      .maplibregl-popup-tip {
+        display: none;
+      }
+      .maplibregl-ctrl-group {
+        border: 1px solid var(--divider) !important;
+        border-radius: 0 !important;
+        background: var(--card) !important;
+        box-shadow: 0 0 12px var(--shadow) !important;
+      }
+      .maplibregl-ctrl-group button + button {
+        border-top: 1px solid var(--border-light) !important;
+      }
+      .maplibregl-ctrl-attrib {
+        border-radius: 0 !important;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 10px !important;
+      }
+      #map {
+        border: 1px solid var(--divider);
+        box-shadow: inset 0 0 40px var(--shadow);
+      }
+      dialog {
+        border: 1px solid var(--theme);
+        border-radius: 0;
         background: var(--card);
+        color: var(--text);
+        box-shadow: 0 0 0 1px var(--bg), 0 0 30px var(--glow), 0 20px 60px var(--shadow-strong);
+      }
+      dialog::backdrop {
+        background: color-mix(in srgb, var(--bg) 75%, transparent);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+      }
+      dialog h2 {
+        font-family: "Orbitron", "Rajdhani", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--theme);
+      }
+      .field {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.74rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-light);
+      }
+      .field input,
+      .field select {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: var(--text);
+      }
+      .field-hint,
+      .form-error {
+        text-transform: none;
+        letter-spacing: 0.02em;
+      }
+
+      /* ----- password screen ----- */
+      .login-card .post-title {
+        font-size: 1.7rem;
+      }
+      .login-card .post-description::before {
+        content: "// access restricted ";
+      }
+      .login-card .post-description::after {
+        content: "_";
+        color: var(--theme);
+        animation: blink 1s steps(2) infinite;
+      }
+      @keyframes blink {
+        to { opacity: 0; }
+      }
+      .reveal {
+        border-radius: 0;
+      }
+
+      /* ----- footer ----- */
+      footer {
+        border-top: 1px solid var(--border-light);
+        font-size: 0.68rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* Lists in the details rows and the insight cards keep the square look. */
+      .vcard,
+      .lead,
+      .vd-page,
+      .ev,
+      .intent,
+      .ai-sum,
+      .labels li {
+        border-radius: 0;
+      }
+      .intent.main {
+        box-shadow: inset 2px 0 0 var(--theme);
+      }
+
+      /* Phones: the header keeps to one line. */
+      @media (max-width: 700px) {
+        .brand {
+          font-size: 0.8rem;
+          letter-spacing: 0.1em;
+          white-space: nowrap;
+        }
+        .brand span {
+          display: none;
+        }
+        .nav-links {
+          gap: 12px;
+          font-size: 0.72rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .post-title::before,
+        .post-title::after,
+        .tile .live-dot,
+        .login-card .post-description::after {
+          animation: none;
+        }
+        .post-title::before,
+        .post-title::after {
+          display: none;
+        }
       }
     </style>
   </head>
@@ -1927,7 +2522,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
 
     <section class="login" id="login" hidden>
       <form class="login-card" id="login-form">
-        <h1 class="post-title">visitors</h1>
+        <h1 class="post-title" data-text="visitors">visitors</h1>
         <p class="post-description">This page is private.</p>
         <p class="muted small" id="login-note" hidden></p>
         <label class="field"
@@ -1977,7 +2572,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
     <main id="main" hidden>
       <div class="page-head">
         <div>
-          <h1 class="post-title">visitors</h1>
+          <h1 class="post-title" data-text="visitors">visitors</h1>
           <p class="post-description" id="subtitle">loading…</p>
           <p class="small muted" id="self-tracking"></p>
         </div>
@@ -2923,30 +3518,30 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
 
       const MAP_COLORS = {
         light: {
-          land: "#f3f1ea",
-          water: "#d9e2e9",
-          park: "#e7e9dc",
-          border: "#b4ada0",
-          state: "#d8d2c5",
-          road: "#e8e3d8",
-          roadMajor: "#ddd5c4",
-          label: "#59616b",
-          labelStrong: "#2b3036",
-          waterLabel: "#7b8a97",
-          halo: "#f3f1ea",
+          land: "#eef0f6",
+          water: "#d4dae9",
+          park: "#e2e8e4",
+          border: "#9aa0b8",
+          state: "#c9cde0",
+          road: "#e4e6f0",
+          roadMajor: "#d6d9e8",
+          label: "#5a6480",
+          labelStrong: "#10121f",
+          waterLabel: "#7f88a8",
+          halo: "#eef0f6",
         },
         dark: {
-          land: "#1a2028",
-          water: "#0d1117",
-          park: "#1a231f",
-          border: "#4a525c",
-          state: "#2c333c",
-          road: "#232a33",
-          roadMajor: "#2c333d",
-          label: "#8b949e",
-          labelStrong: "#c9d1d9",
-          waterLabel: "#4f5b67",
-          halo: "#1a2028",
+          land: "#0a0d1a",
+          water: "#05060d",
+          park: "#0d1524",
+          border: "#1f6f78",
+          state: "#15303a",
+          road: "#13233a",
+          roadMajor: "#1a3350",
+          label: "#5fa8b8",
+          labelStrong: "#9ee8f5",
+          waterLabel: "#2d5c6b",
+          halo: "#05060d",
         },
       };
       // [layer, paint property, color key]; used both to build the style and to recolor it on theme change.
