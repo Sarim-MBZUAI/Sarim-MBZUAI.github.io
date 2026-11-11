@@ -25,7 +25,7 @@ const featuredPublications = publications
         </button>
         <div class="bio-more" id="bio-more" hidden>
           <p>
-            My work spans the development of <a href="https://www.etihad.com/en-ae/help" target="_blank" rel="noopener">Etihad Airways' conversational agent</a>, including retrieval, planning, structured response generation, real-time voice agent integration, and a <em>UserLM</em> for stress-testing. I also contribute to <em><a href="https://arxiv.org/abs/2610.08773" target="_blank" rel="noopener">AdvSim2Real</a></em>, a collaboration with <strong>Amazon</strong>, which aims to strengthen agentic systems through adversarial simulation. In parallel, I have worked on <em>PERSUADE</em>, a framework for auditing persuasion in LLMs, as well as research on <a href="https://arxiv.org/abs/2610.05870" target="_blank" rel="noopener">authentic multimedia detection</a> and <a href="https://github.com/Sarim-MBZUAI/prompt_sensitivity" target="_blank" rel="noopener">vision-language robustness</a>. Although these areas differ on the surface, they are connected by the same central concern: understanding how AI systems behave under pressure.
+            My work has increasingly been shaped by one question: what happens when AI systems face situations they weren't prepared for? I first explored this through <a href="https://arxiv.org/abs/2610.05870" target="_blank" rel="noopener">multimedia authenticity detection</a> and <a href="https://github.com/Sarim-MBZUAI/prompt_sensitivity" target="_blank" rel="noopener">vision-language robustness</a>, studying where models fail and how reliably they distinguish genuine information from manipulation. This interest became more practical while developing <a href="https://www.etihad.com/en-ae/help" target="_blank" rel="noopener">Etihad Airways' now-live conversational agent</a>, where I worked across retrieval, planning, structured response generation, and real-time voice integration. Building an agent that customers could actually use also meant understanding how it might fail, which led me to develop a <em>UserLM</em> to stress-test its behavior before deployment. That same curiosity now drives my research. In <em><a href="https://arxiv.org/abs/2610.08773" target="_blank" rel="noopener">AdvSim2Real</a></em>, a collaboration with <strong>Amazon</strong>, I explore how agents can become more robust by learning from adaptive adversaries in simulated environments. In <em>PERSUADE</em>, I study a different kind of vulnerability: how LLMs influence one another through persuasion in multi-turn debates. Although these projects span different areas, they follow a common thread: moving beyond what AI systems can do to understand how they behave, fail, and improve under pressure.
           </p>
           <p>
             Previously, I completed an MSc by Research in Computer Vision at MBZUAI under the supervision of <a href="https://mbzuai.ac.ae/study/faculty/mohammad-yaqub/" target="_blank" rel="noopener">Dr. Mohammad Yaqub</a>. Before that, I earned a BTech in Mechanical Engineering from <a href="https://jmi.ac.in/" target="_blank" rel="noopener">Jamia Millia Islamia</a> and worked on autonomous-vehicle research at <a href="https://www.iiitd.ac.in/" target="_blank" rel="noopener">IIIT Delhi</a> under <a href="https://www.iiitd.ac.in/anands" target="_blank" rel="noopener">Dr. Saket Anand</a>.
@@ -97,6 +97,7 @@ const featuredPublications = publications
         {news.map((item: any) => (
           <li class="news-item">
             <span class="news-date">{item.date}</span>
+            <span class="news-logo">{item.logo && <img src={`/images/news/${item.logo}.png`} alt="" loading="lazy" />}</span>
             <span class="news-text">
               {item.isNew && <span class="news-new"><span class="news-new-dot"></span>NEW</span>}
               <span set:html={item.text} />
@@ -385,8 +386,8 @@ const featuredPublications = publications
   }
   .news-item {
     display: grid;
-    grid-template-columns: 88px 1fr;
-    gap: 1rem;
+    grid-template-columns: 88px 26px 1fr;
+    gap: 0.75rem;
     padding: 0.85rem 0;
     border-bottom: 1px dashed var(--border);
     font-family: var(--font-sans);
@@ -401,6 +402,22 @@ const featuredPublications = publications
     font-variant-numeric: tabular-nums;
     font-weight: 500;
     white-space: nowrap;
+  }
+  .news-logo {
+    display: flex;
+    align-items: center;
+    height: 1.55em;
+  }
+  .news-logo img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+  }
+  :global([data-theme="dark"]) .news-logo img {
+    background: #f4f4f4;
+    padding: 1px;
   }
   .news-text {
     color: var(--text-muted);
@@ -481,9 +498,12 @@ const featuredPublications = publications
       max-height: 360px;
     }
     .news-item {
-      grid-template-columns: 1fr;
-      gap: 0.15rem;
+      grid-template-columns: 26px 1fr;
+      gap: 0.15rem 0.5rem;
       padding: 0.75rem 0;
+    }
+    .news-date {
+      grid-column: 1 / -1;
     }
     .news-date {
       font-size: 0.8125rem;
