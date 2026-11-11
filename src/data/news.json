@@ -1,7 +1,7 @@
 [
   { "logo": "etihad", "date": "Nov 2026", "isNew": true, "text": "<a href=\"https://www.etihad.com/en-ae/help\" target=\"_blank\" rel=\"noopener\"><strong>Etihad chatbot</strong></a> is live." },
-  { "logo": "mbzuai", "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Eyes on Heritage Hackathon 2026</strong> at the Natural History Museum Abu Dhabi; awarded AED 8,000 (≈ USD 2,180)." },
-  { "logo": "ku", "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Amazon Experience Hackathon 2026</strong> at Khalifa University, Abu Dhabi; awarded AED 9,000 (≈ USD 2,450)." },
+  { "logo": "heritagewatch", "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Eyes on Heritage Hackathon 2026</strong> at the Natural History Museum Abu Dhabi; awarded AED 8,000 (≈ USD 2,180)." },
+  { "logo": "ucn", "date": "Oct 2026", "isNew": true, "text": "Won the <strong>Amazon Experience Hackathon 2026</strong> at Khalifa University, Abu Dhabi; awarded AED 9,000 (≈ USD 2,450)." },
   { "logo": "cursor", "date": "Jun 2026", "text": "Won the <strong>Cursor x Evoost AI Hackathon 2026</strong> with <a href=\"https://github.com/Salah-P/CursorHackathon-\" target=\"_blank\" rel=\"noopener\"><em>Hakim AI</em></a>." },
   { "logo": "acl", "date": "Apr 2026", "text": "<em>CASS</em> (Nvidia → AMD transpilation) accepted at the <strong>ACL 2026 Main Conference</strong>." },
   { "date": "Mar 2026", "text": "Submitted <em>PERSUADE</em> — a debate arena for auditing persuasion in LLMs." },
