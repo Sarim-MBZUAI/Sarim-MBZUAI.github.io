@@ -33,8 +33,8 @@
     /* ALPHA scales every stroke/fill opacity. Dark backgrounds crush faint
        strokes on real displays, so dark mode draws noticeably stronger. */
     var PALETTE = {
-      light: { edge: '201, 168, 128', glow: '222, 190, 142', alpha: 1 },   /* soft sand / pale gold */
-      dark:  { edge: '214, 190, 158', glow: '236, 214, 180', alpha: 1.6 } /* lighter, less saturated */
+      light: { edge: '120, 170, 135', glow: '40, 150, 85', alpha: 1 },   /* sage / leaf green */
+      dark:  { edge: '120, 180, 140', glow: '150, 225, 175', alpha: 1.6 } /* lighter, less saturated */
     };
     var EDGE = PALETTE.light.edge, GLOW = PALETTE.light.glow, ALPHA = 1;
     function applyColors() {

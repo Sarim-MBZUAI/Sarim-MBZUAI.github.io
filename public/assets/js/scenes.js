@@ -27,8 +27,8 @@
     var get = function (n, fb) { return cs.getPropertyValue(n).trim() || fb; };
     P.ink = toRgb(get('--text', '#171717'));
     P.muted = toRgb(get('--text-muted', '#6e6e6e'));
-    P.accent = toRgb(get('--accent', '#bf8a54'));
-    P.hot = toRgb(get('--accent-hover', '#a67542'));
+    P.accent = toRgb(get('--accent', '#15803d'));
+    P.hot = toRgb(get('--accent-hover', '#166534'));
     P.dark = document.documentElement.getAttribute('data-theme') === 'dark';
     /* in dark mode the "hot" accent is the brighter of the two */
     if (P.dark) { var t = P.hot; P.hot = P.accent; P.accent = t; }
