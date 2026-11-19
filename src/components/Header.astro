@@ -5,6 +5,7 @@ const pathname = Astro.url.pathname;
 
 const navLinks = [
   { href: '/', label: 'About' },
+  { href: '/work', label: 'What I work on' },
   { href: '/publications', label: 'Publications' },
   { href: '/experience', label: 'Experience' },
   { href: '/projects', label: 'Projects' },
@@ -68,6 +69,7 @@ const navLinks = [
     letter-spacing: 0.03em;
     color: var(--text);
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .logo:hover {
@@ -98,14 +100,16 @@ const navLinks = [
   .nav {
     display: flex;
     align-items: center;
-    gap: 1.75rem;
+    gap: 1.1rem;
+    margin-left: 1rem;
   }
 
   .nav-link {
     font-family: var(--font-sans);
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.9375rem;
+    white-space: nowrap;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.15s ease;
   }

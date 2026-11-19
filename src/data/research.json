@@ -1,0 +1,88 @@
+{
+  "centre": ["Secure and", "trustworthy AI"],
+  "projects": {
+    "etihad": { "title": "Etihad Airways conversational agent", "venue": "Deployed 2026", "status": "in production", "url": "https://www.etihad.com/en-ae/help" }
+  },
+  "branches": [
+    {
+      "name": "AI safety", "color": "#c49a1c", "side": "left",
+      "groups": [
+        { "name": "Explanations", "problems": [
+          { "name": "Hidden reasons", "blurb": "A model's stated explanation is not always the reason behind its answer.", "papers": [] }
+        ] },
+        { "name": "Persuasion", "problems": [
+          { "name": "Unmeasured persuasion", "blurb": "There is no standard way to measure how well a model talks people round, or how that changes once it is trained to.", "papers": ["PERSUADE", "GROVE"] },
+          { "name": "Judges swayed by persuasion", "blurb": "A judge model can be won over by rhetoric rather than evidence, so persuasive answers get rewarded over true ones.", "papers": ["PERSUADE"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Provenance", "color": "#7b5cc4", "side": "left",
+      "groups": [
+        { "name": "Model copies", "problems": [
+          { "name": "Fakes passing as real", "blurb": "Generated images and audio pass as authentic, and a detector trained on yesterday's generators misses tomorrow's.", "papers": ["Certification of Real Images", "Robust and Calibrated Detection"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Agent security", "color": "#d9752a", "side": "left",
+      "groups": [
+        { "name": "Attacks", "problems": [
+          { "name": "Hidden orders in pages", "blurb": "A web page can carry an instruction that an agent reads and follows as if it came from the user.", "papers": ["AdvSim2Real"] }
+        ] },
+        { "name": "Defenses", "problems": [
+          { "name": "Scarce injection examples", "blurb": "Real injection attacks are rare and adaptive, so there is little data to train a defence on.", "papers": ["AdvSim2Real"] }
+        ] },
+        { "name": "Flows and plans", "problems": [
+          { "name": "Self-changing agents", "blurb": "An agent that rewrites its own strategy can drift away from what it was deployed to do.", "papers": ["SIRA"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Adversarial ML", "color": "#2a8f9c", "side": "right",
+      "groups": [
+        { "name": "Test-time attacks", "problems": [
+          { "name": "Steered activations", "blurb": "Nudging a model's internal activations can plant a bias that no prompt filter ever sees.", "papers": ["Noise Out, Bias In"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Privacy", "color": "#3d9a4b", "side": "right",
+      "groups": [
+        { "name": "Contextual integrity", "problems": [
+          { "name": "Oversharing agents", "blurb": "An agent with access to private context can reveal it to the wrong party in the course of a task.", "papers": [] }
+        ] }
+      ]
+    },
+    {
+      "name": "Reliability", "color": "#c93f7a", "side": "right",
+      "groups": [
+        { "name": "Model evaluation", "problems": [
+          { "name": "Failures real users find", "blurb": "Benchmarks miss the ways real users phrase things, push back and go off-script; a live deployment finds them.", "papers": ["@etihad"] }
+        ] },
+        { "name": "Perception", "problems": [
+          { "name": "Missed medical findings", "blurb": "Segmentation models trained on one population miss tumours in scans from another, and adapting them is costly.", "papers": ["Optimizing Brain Tumor Segmentation", "SALT"] },
+          { "name": "Distracted robot vision", "blurb": "Navigation models lose their way when the instruction changes language or the scene gets cluttered.", "papers": ["Language and Planning in Robotic Navigation"] },
+          { "name": "Overconfident models", "blurb": "Models rarely notice when they are out of their depth, so they neither abstain nor escalate.", "papers": ["Robust and Calibrated Detection"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Code generation", "color": "#4a7fb5", "side": "right",
+      "groups": [
+        { "name": "Transpilation", "problems": [
+          { "name": "Vendor-locked GPU code", "blurb": "CUDA code is tied to one vendor's accelerators, and porting it to another by hand is slow and error-prone.", "papers": ["CASS"] },
+          { "name": "Unverified assembly translation", "blurb": "A translated binary that assembles is not one that behaves the same, so translation needs test-backed guarantees.", "papers": ["Guaranteed Guess"] }
+        ] }
+      ]
+    },
+    {
+      "name": "Efficient learning", "color": "#8a6a3d", "side": "right",
+      "groups": [
+        { "name": "Self-improvement", "problems": [
+          { "name": "Agents that never learn", "blurb": "A deployed recommendation agent keeps the same strategy while demand shifts under it.", "papers": ["SIRA"] }
+        ] }
+      ]
+    }
+  ]
+}

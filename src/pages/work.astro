@@ -1,0 +1,270 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import research from '../data/research.json';
+import publications from '../data/publications.json';
+
+// Resolve each problem's paper keys (a title prefix, or "@key" for a project)
+// to the publication records so the client script only has to draw.
+const paperOf = (key: string) => {
+  if (key.startsWith('@')) {
+    const p = (research.projects as any)[key.slice(1)];
+    return { title: p.title, venue: p.venue, status: p.status, url: p.url || '', kind: 'system' };
+  }
+  const pub = publications.find((p) => p.title.startsWith(key));
+  if (!pub) throw new Error(`research.json: no publication starts with "${key}"`);
+  const status = pub.venue === 'Under review' ? 'under review' : 'published';
+  const venue = pub.venue === 'Under review' ? `Preprint ${pub.year}` : pub.venue;
+  return { title: pub.title, venue, status, url: pub.links?.paper || '', kind: 'paper' };
+};
+const branches = research.branches.map((b) => ({
+  ...b,
+  groups: b.groups.map((g) => ({ ...g, problems: g.problems.map((p) => ({ ...p, papers: p.papers.map(paperOf) })) })),
+}));
+const problems = branches.flatMap((b) => b.groups.flatMap((g) => g.problems));
+const nProblems = problems.length;
+const paperTitles = new Set(problems.flatMap((p) => p.papers.filter((x) => x.status !== 'no paper yet' && x.status !== 'in production').map((x) => x.title)));
+const nPapers = paperTitles.size;
+const perBranch = branches.map((b) => ({ name: b.name, color: b.color, n: new Set(b.groups.flatMap((g) => g.problems.flatMap((p) => p.papers.map((x) => x.title)))).size }));
+const data = { centre: research.centre, branches, nProblems, nPapers };
+---
+
+<Layout title="What I work on — Sarim Hashmi" description="What Sarim Hashmi works on: the problems, grouped the way the field splits them, and the papers behind each one.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" />
+  <Header />
+  <main>
+    <h1 class="page-title">What I work on</h1>
+    <p class="rs-intro">
+      At the center is my field of research, branching out into different topics, with each leaf representing a problem I work on. Hover over a problem to explore related papers, or over a topic to highlight its entire branch.
+    </p>
+    <div class="rs-legend" id="rs-legend">
+      {perBranch.map((b) => (
+        <button class="rs-chip" data-branch={b.name} style={`--c:${b.color}`}><i></i>{b.name}{b.n > 0 && <sup>{b.n}</sup>}</button>
+      ))}
+    </div>
+
+    <div class="rs-wrap" id="rs-wrap">
+      <svg id="rs-map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mind map of research problems and the papers on them"></svg>
+      <div class="rs-pop" id="rs-pop" hidden></div>
+    </div>
+    <p class="rs-hint">Scroll the map sideways to see both halves.</p>
+    <p class="rs-foot">Papers under review are listed as preprints; two leaves are work in progress with nothing to show yet. Click a leaf or a topic to keep it lit.</p>
+    <div class="footer-spacer"></div>
+  </main>
+</Layout>
+
+<script is:inline define:vars={{ data }}>
+function build() {
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('rs-map'), wrap = document.getElementById('rs-wrap'), pop = document.getElementById('rs-pop');
+  const W = 1240, CX = W / 2;
+  const LEAF = 24, GROUP_GAP = 12, BRANCH_GAP = 34, TOP = 36;
+  // Deterministic jitter so the hand-drawn wobble is the same on every load.
+  let seed = 7; const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - 0.5; };
+  const el = (n, a, parent) => { const e = document.createElementNS(svgNS, n); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
+
+  // ---- layout: stack leaves per side, then centre groups and branches on their leaves
+  function layoutSide(branches) {
+    let y = TOP;
+    for (const b of branches) {
+      for (const g of b.groups) {
+        for (const p of g.problems) { p.y = y; y += LEAF; }
+        g.y = (g.problems[0].y + g.problems[g.problems.length - 1].y) / 2; y += GROUP_GAP;
+      }
+      b.y = (b.groups[0].y + b.groups[b.groups.length - 1].y) / 2; y += BRANCH_GAP;
+    }
+    return y - BRANCH_GAP - GROUP_GAP + TOP;
+  }
+  const left = data.branches.filter(b => b.side === 'left'), right = data.branches.filter(b => b.side !== 'left');
+  const H = Math.max(layoutSide(left), layoutSide(right), 560);
+  // Vertically centre the shorter side.
+  for (const [side, h] of [[left, layoutSide(left)], [right, layoutSide(right)]]) {
+    const dy = (H - h) / 2; if (dy <= 0) continue;
+    for (const b of side) { b.y += dy; for (const g of b.groups) { g.y += dy; for (const p of g.problems) p.y += dy; } }
+  }
+  const CY = H / 2;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // Horizontal positions (mirrored for the left side).
+  const X = { branch: 128, group: 262, leaf: 412 };
+  const sx = (side, x) => side === 'left' ? CX - x : CX + x;
+
+  // A slightly wobbly curve: cubic bezier with jittered control points.
+  function curve(x1, y1, x2, y2, bend) {
+    const dx = (x2 - x1) * bend;
+    return `M${x1} ${y1} C${x1 + dx + rnd() * 6} ${y1 + rnd() * 4}, ${x2 - dx + rnd() * 6} ${y2 + rnd() * 4}, ${x2} ${y2}`;
+  }
+
+  const gEdges = el('g', { class: 'rs-edges' }, svg), gNodes = el('g', { class: 'rs-nodes' }, svg);
+  const nodes = []; // for hover bookkeeping
+
+  for (const b of data.branches) {
+    const s = b.side, col = b.color;
+    const bg = el('g', { class: 'rs-branch', 'data-branch': b.name, style: `--c:${col}` }, gNodes);
+    // centre -> branch
+    el('path', { d: curve(sx(s, 92), CY + rnd() * 10, sx(s, X.branch - 6), b.y, 0.55), class: 'rs-edge rs-edge-1', 'data-branch': b.name, style: `--c:${col}` }, gEdges);
+    const bl = el('text', { x: sx(s, X.branch), y: b.y + 6, class: 'rs-tbranch', 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 3} ${sx(s, X.branch)} ${b.y})` }, bg);
+    bl.textContent = b.name;
+    const bw = bl.getComputedTextLength() + 2;
+    labelEvents(bl, b.name);
+    el('path', { d: curve(sx(s, X.branch), b.y + 11, sx(s, X.branch + bw), b.y + 12 + rnd() * 3, 0.3), class: 'rs-under rs-under-b' }, bg);
+    for (const g of b.groups) {
+      el('path', { d: curve(sx(s, X.branch + bw + 4), b.y + 8, sx(s, X.group - 6), g.y, 0.6), class: 'rs-edge rs-edge-2', 'data-branch': b.name, style: `--c:${col}` }, gEdges);
+      const gl = el('text', { x: sx(s, X.group), y: g.y + 5, class: 'rs-tgroup', 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 3} ${sx(s, X.group)} ${g.y})` }, bg);
+      gl.textContent = g.name;
+      const gw = gl.getComputedTextLength() + 2;
+      labelEvents(gl, b.name);
+      el('path', { d: curve(sx(s, X.group), g.y + 9, sx(s, X.group + gw), g.y + 10 + rnd() * 2, 0.3), class: 'rs-under rs-under-g' }, bg);
+      for (const p of g.problems) {
+        el('path', { d: curve(sx(s, X.group + gw + 4), g.y + 7, sx(s, X.leaf - 6), p.y, 0.6), class: 'rs-edge rs-edge-3', 'data-branch': b.name, style: `--c:${col}` }, gEdges);
+        const node = el('g', { class: 'rs-leaf' + (p.papers.length ? '' : ' rs-wip'), tabindex: '0', role: 'button', 'aria-label': `${p.name}: ${p.papers.length} ${p.papers.length === 1 ? 'paper' : 'papers'}` }, bg);
+        const t = el('text', { x: sx(s, X.leaf), y: p.y + 6, class: 'rs-tleaf', 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 2.5} ${sx(s, X.leaf)} ${p.y})` }, node);
+        t.textContent = p.name;
+        if (p.papers.length) { const sup = el('tspan', { dy: -7, class: 'rs-sup' }, t); sup.textContent = ' ' + p.papers.length; }
+        const lw = t.getComputedTextLength() + 2;
+        const ux1 = sx(s, X.leaf), ux2 = sx(s, X.leaf + lw);
+        el('path', { d: curve(ux1, p.y + 10, ux2, p.y + 11 + rnd() * 2, 0.3), class: 'rs-under rs-under-l' }, node);
+        // invisible hit area
+        el('rect', { x: Math.min(ux1, ux2) - 6, y: p.y - 10, width: Math.abs(ux2 - ux1) + 12, height: 24, fill: 'transparent' }, node);
+        nodes.push({ node, p, b, side: s, x: s === 'left' ? Math.min(ux1, ux2) : ux2, y: p.y });
+        node.addEventListener('pointerenter', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2); } });
+        node.addEventListener('pointerleave', () => { if (!pinned) scheduleHide(); });
+        node.addEventListener('focus', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2); } });
+        node.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pin(node); show(p, b, s, ux1, ux2); } });
+        node.addEventListener('click', (e) => { e.stopPropagation(); cancelHide(); pin(node); show(p, b, s, ux1, ux2); });
+      }
+    }
+  }
+
+  // ---- centre
+  const c = el('g', { class: 'rs-centre' }, gNodes);
+  el('ellipse', { cx: CX, cy: CY, rx: 104, ry: 50, class: 'rs-ell' }, c);
+  el('ellipse', { cx: CX + 2, cy: CY + 1.5, rx: 106, ry: 49, class: 'rs-ell rs-ell-2', transform: `rotate(-2 ${CX} ${CY})` }, c);
+  data.centre.forEach((line, i) => { const t = el('text', { x: CX, y: CY - 3 + i * 25, class: 'rs-tcentre', 'text-anchor': 'middle' }, c); t.textContent = line; });
+
+  // ---- highlighting
+  let pinned = null, hideTimer = null;
+  function scheduleHide() { cancelHide(); hideTimer = setTimeout(hide, 220); }
+  function cancelHide() { if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } }
+  function pin(what) { pinned = what; svg.classList.add('rs-pinned'); }
+  function unpin() { pinned = null; svg.classList.remove('rs-pinned'); }
+  function labelEvents(t, branchName) {
+    t.classList.add('rs-clickable');
+    t.addEventListener('pointerenter', () => { if (!pinned) light(branchName); });
+    t.addEventListener('pointerleave', () => { if (!pinned) light(null); });
+    t.addEventListener('click', (e) => { e.stopPropagation(); pop.hidden = true; pin(t); light(branchName); });
+  }
+  pop.addEventListener('pointerenter', cancelHide);
+  pop.addEventListener('pointerleave', () => { if (!pinned) scheduleHide(); });
+  pop.addEventListener('click', (e) => e.stopPropagation());
+  function light(branchName) {
+    svg.classList.toggle('rs-focus', !!branchName);
+    svg.querySelectorAll('[data-branch]').forEach(e => e.classList.toggle('lit', e.dataset.branch === branchName));
+    document.querySelectorAll('.rs-chip').forEach(ch => ch.classList.toggle('lit', ch.dataset.branch === branchName));
+  }
+  function show(p, b, side, ux1, ux2) {
+    light(b.name);
+    svg.querySelectorAll('.rs-leaf.hot').forEach(e => e.classList.remove('hot'));
+    pop.innerHTML = '';
+    const xb = document.createElement('button'); xb.className = 'rs-pop-close'; xb.setAttribute('aria-label', 'Close'); xb.textContent = '×';
+    xb.addEventListener('click', () => { unpin(); hide(); }); pop.appendChild(xb);
+    const k = document.createElement('div'); k.className = 'rs-pop-kicker'; k.textContent = b.name; k.style.color = b.color; pop.appendChild(k);
+    const h = document.createElement('div'); h.className = 'rs-pop-title'; h.textContent = p.name; pop.appendChild(h);
+    const d = document.createElement('p'); d.className = 'rs-pop-blurb'; d.textContent = p.blurb; pop.appendChild(d);
+    const lab = document.createElement('div'); lab.className = 'rs-pop-label';
+    const nP = p.papers.filter(x => x.kind === 'paper').length, nS = p.papers.length - nP;
+    lab.textContent = !p.papers.length ? 'Work in progress' : nP && nS ? 'Papers and systems on it' : nS ? (nS === 1 ? 'The system built on it' : 'Systems built on it') : (nP === 1 ? 'The paper on it' : 'The papers on it'); pop.appendChild(lab);
+    if (!p.papers.length) { const e = document.createElement('p'); e.className = 'rs-pop-blurb'; e.textContent = 'Nothing to show yet.'; pop.appendChild(e); }
+    for (const paper of p.papers) {
+      const row = document.createElement('div'); row.className = 'rs-pop-paper';
+      const t = document.createElement(paper.url ? 'a' : 'span'); t.className = 'rs-pop-ptitle'; t.textContent = paper.title;
+      if (paper.url) { t.href = paper.url; t.target = '_blank'; t.rel = 'noopener'; }
+      const v = document.createElement('div'); v.className = 'rs-pop-venue'; v.textContent = paper.venue + ' · ' + paper.status;
+      row.appendChild(t); row.appendChild(v); pop.appendChild(row);
+    }
+    pop.hidden = false;
+    // Position in wrapper pixels, scaled from viewBox units.
+    const r = svg.getBoundingClientRect(), sc = r.width / W;
+    const popW = pop.offsetWidth, popH = pop.offsetHeight;
+    let x = side === 'left' ? Math.max(ux1, ux2) * sc - popW : Math.min(ux1, ux2) * sc;
+    let y = (p.y + 13) * sc;
+    x = Math.max(4, Math.min(x, r.width - popW - 4));
+    y = Math.max(4, Math.min(y, r.height - popH - 4));
+    pop.style.left = x + 'px'; pop.style.top = y + 'px';
+  }
+  function hide() { cancelHide(); pop.hidden = true; light(null); }
+
+  // Chips light a whole branch.
+  document.querySelectorAll('.rs-chip').forEach(ch => {
+    ch.addEventListener('pointerenter', () => { if (!pinned) light(ch.dataset.branch); });
+    ch.addEventListener('pointerleave', () => { if (!pinned) light(null); });
+    ch.addEventListener('click', (e) => { e.stopPropagation(); hide(); pin(ch); light(ch.dataset.branch); });
+  });
+  document.addEventListener('click', () => { if (pinned) { unpin(); hide(); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { unpin(); hide(); } });
+}
+let built = false; const go = () => { if (!built) { built = true; build(); const w = document.getElementById('rs-wrap'); if (w.scrollWidth > w.clientWidth) w.scrollLeft = (w.scrollWidth - w.clientWidth) / 2; } };
+if (document.fonts && document.fonts.load) { document.fonts.load('600 20px Caveat').then(go, go); setTimeout(go, 2500); } else go();
+</script>
+
+<style is:global>
+  .rs-intro { color: var(--text-secondary); max-width: 640px; margin: -1.2rem 0 1.4rem; font-size: 1rem; }
+  .rs-foot { color: var(--text-muted); font-family: var(--font-sans); font-size: 0.78rem; margin-top: 1rem; }
+  .rs-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; margin-bottom: 1.2rem; font-family: var(--font-sans); }
+  .rs-count { font-size: 0.8rem; color: var(--text-muted); margin-right: 0.4rem; }
+  .rs-chip { display: inline-flex; align-items: center; gap: 0.35rem; font: 600 0.72rem var(--font-sans); color: var(--text-secondary); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px 3px 7px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .rs-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .rs-chip sup { font-size: 0.6rem; color: var(--text-muted); margin-left: 1px; }
+  .rs-chip:hover, .rs-chip.lit { background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--text); border-color: var(--c); }
+  [data-theme="dark"] .rs-chip { border-color: rgba(255,255,255,0.18); }
+
+  /* Break out of the 860px column so the map has room. */
+  .rs-wrap { position: relative; width: min(1240px, 100vw - 2rem); margin-left: calc(50% - min(1240px, 100vw - 2rem) / 2); overflow: visible; }
+  #rs-map { display: block; width: 100%; min-width: 960px; height: auto; font-family: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive; }
+
+  .rs-edge { fill: none; stroke: var(--c); stroke-linecap: round; transition: opacity 0.2s; }
+  .rs-edge-1 { stroke-width: 3; } .rs-edge-2 { stroke-width: 2; opacity: 0.85; } .rs-edge-3 { stroke-width: 1.4; opacity: 0.7; }
+  .rs-under { fill: none; stroke: var(--c); stroke-linecap: round; }
+  .rs-under-b { stroke-width: 2.2; } .rs-under-g { stroke-width: 1.3; opacity: 0.7; } .rs-under-l { stroke-width: 1.1; opacity: 0.55; }
+  .rs-tbranch { font-size: 21px; font-weight: 600; fill: var(--c); }
+  .rs-tgroup { font-size: 17px; font-weight: 500; fill: var(--text-muted); }
+  .rs-tleaf { font-size: 17.5px; font-weight: 500; fill: var(--text); }
+  .rs-sup { font-size: 11px; fill: var(--c); font-weight: 600; }
+  .rs-leaf, .rs-clickable { cursor: pointer; outline: none; }
+  .rs-leaf:hover .rs-tleaf, .rs-leaf:focus .rs-tleaf { fill: var(--c); }
+  .rs-leaf:hover .rs-under-l, .rs-leaf:focus .rs-under-l { opacity: 1; stroke-width: 2; }
+  .rs-wip .rs-tleaf { fill: var(--text-muted); font-style: italic; }
+  .rs-ell { fill: var(--bg); stroke: var(--text); stroke-width: 1.6; }
+  .rs-ell-2 { fill: none; stroke-width: 0.9; opacity: 0.55; }
+  .rs-tcentre { font-size: 23px; font-weight: 600; fill: var(--text); }
+  .rs-tsub { font-size: 13px; fill: var(--text-muted); font-family: var(--font-sans); }
+
+  /* Dim everything that is not the lit branch. */
+  .rs-focus .rs-branch, .rs-focus .rs-edge { opacity: 0.22; transition: opacity 0.2s; }
+  .rs-focus .rs-branch.lit { opacity: 1; }
+  .rs-focus .rs-edge-1.lit { opacity: 1; } .rs-focus .rs-edge-2.lit { opacity: 0.85; } .rs-focus .rs-edge-3.lit { opacity: 0.7; }
+
+  .rs-pop { position: absolute; z-index: 5; width: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-hover); padding: 12px 14px 10px; font-family: var(--font-sans); pointer-events: auto; }
+  [data-theme="dark"] .rs-pop { border-color: rgba(255,255,255,0.14); }
+  .rs-pop-close { position: absolute; top: 6px; right: 8px; background: none; border: none; color: var(--text-muted); font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 2px 4px; }
+  .rs-pop-close:hover { color: var(--text); }
+  .rs-pop-kicker { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .rs-pop-title { font-family: 'Caveat', cursive; font-size: 1.45rem; font-weight: 600; line-height: 1.1; margin: 2px 0 6px; color: var(--text); }
+  .rs-pop-blurb { font-family: var(--font-serif); font-size: 0.92rem; line-height: 1.45; color: var(--text-secondary); margin: 0 0 8px; }
+  .rs-pop-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 8px 0 4px; }
+  .rs-pop-paper { padding: 4px 0; }
+  .rs-pop-paper + .rs-pop-paper { border-top: 1px dashed var(--border); }
+  .rs-pop-ptitle { font-size: 0.82rem; font-weight: 600; color: var(--text); text-decoration: none; display: block; line-height: 1.3; }
+  a.rs-pop-ptitle:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  .rs-pop-venue { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+
+  .rs-hint { display: none; }
+  @media (max-width: 1000px) {
+    .rs-wrap { overflow-x: auto; }
+    .rs-hint { display: block; font-family: var(--font-sans); font-size: 0.72rem; color: var(--text-muted); text-align: center; margin: 0.4rem 0 0; }
+  }
+  @media (max-width: 600px) {
+    .rs-wrap { width: calc(100vw - 2rem); margin-left: 0; }
+    .rs-pop { width: 260px; }
+  }
+</style>
