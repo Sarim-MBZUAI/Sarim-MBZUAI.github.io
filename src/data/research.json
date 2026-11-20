@@ -1,7 +1,8 @@
 {
   "centre": ["Secure and", "trustworthy AI"],
   "projects": {
-    "etihad": { "title": "Etihad Airways conversational agent", "venue": "Deployed 2026", "status": "in production", "url": "https://www.etihad.com/en-ae/help" }
+    "etihad": {"title": "Etihad Airways conversational agent", "venue": "Deployed 2026", "status": "in production", "url": "https://www.etihad.com/en-ae/help"},
+    "posix": {"title": "When Prompts Vary but Intent Remains: Enforcing Robustness in Vision Language Models", "venue": "MSc thesis, part II · 2025", "status": "code on GitHub", "url": "https://github.com/Sarim-MBZUAI/prompt_sensitivity", "kind": "thesis"}
   },
   "branches": [
     {
@@ -58,7 +59,7 @@
       "name": "Reliability", "color": "#c93f7a", "side": "right",
       "groups": [
         { "name": "Model evaluation", "problems": [
-          { "name": "Failures real users find", "blurb": "Benchmarks miss the ways real users phrase things, push back and go off-script; a live deployment finds them.", "papers": ["@etihad"] }
+          { "name": "Failures real users find", "blurb": "Real users make typos, change the format, paraphrase, push back and go off-script, and a model's answer should not change when only the wording does. Benchmarks miss these failures; prompt-variation tests and live deployments find them.", "papers": ["@posix", "@etihad"] }
         ] },
         { "name": "Perception", "problems": [
           { "name": "Missed medical findings", "blurb": "Segmentation models trained on one population miss tumours in scans from another, and adapting them is costly.", "papers": ["Optimizing Brain Tumor Segmentation", "SALT"] },

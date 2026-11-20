@@ -9,7 +9,7 @@ import publications from '../data/publications.json';
 const paperOf = (key: string) => {
   if (key.startsWith('@')) {
     const p = (research.projects as any)[key.slice(1)];
-    return { title: p.title, venue: p.venue, status: p.status, url: p.url || '', kind: 'system' };
+    return { title: p.title, venue: p.venue, status: p.status, url: p.url || '', kind: p.kind || 'system' };
   }
   const pub = publications.find((p) => p.title.startsWith(key));
   if (!pub) throw new Error(`research.json: no publication starts with "${key}"`);
@@ -23,7 +23,7 @@ const branches = research.branches.map((b) => ({
 }));
 const problems = branches.flatMap((b) => b.groups.flatMap((g) => g.problems));
 const nProblems = problems.length;
-const paperTitles = new Set(problems.flatMap((p) => p.papers.filter((x) => x.status !== 'no paper yet' && x.status !== 'in production').map((x) => x.title)));
+const paperTitles = new Set(problems.flatMap((p) => p.papers.filter((x) => x.kind === 'paper').map((x) => x.title)));
 const nPapers = paperTitles.size;
 const perBranch = branches.map((b) => ({ name: b.name, color: b.color, n: new Set(b.groups.flatMap((g) => g.problems.flatMap((p) => p.papers.map((x) => x.title)))).size }));
 const data = { centre: research.centre, branches, nProblems, nPapers };
@@ -109,29 +109,36 @@ function build() {
     labelEvents(bl, b.name);
     el('path', { d: curve(sx(s, X.branch), b.y + 11, sx(s, X.branch + bw), b.y + 12 + rnd() * 3, 0.3), class: 'rs-under rs-under-b' }, bg);
     for (const g of b.groups) {
-      el('path', { d: curve(sx(s, X.branch + bw + 4), b.y + 8, sx(s, X.group - 6), g.y, 0.6), class: 'rs-edge rs-edge-2', 'data-branch': b.name, style: `--c:${col}` }, gEdges);
-      const gl = el('text', { x: sx(s, X.group), y: g.y + 5, class: 'rs-tgroup', 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 3} ${sx(s, X.group)} ${g.y})` }, bg);
+      const gk = b.name + '/' + g.name;
+      el('path', { d: curve(sx(s, X.branch + bw + 4), b.y + 8, sx(s, X.group - 6), g.y, 0.6), class: 'rs-edge rs-edge-2', 'data-branch': b.name, 'data-group': gk, style: `--c:${col}` }, gEdges);
+      const gl = el('text', { x: sx(s, X.group), y: g.y + 5, class: 'rs-tgroup', 'data-group': gk, 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 3} ${sx(s, X.group)} ${g.y})` }, bg);
       gl.textContent = g.name;
       const gw = gl.getComputedTextLength() + 2;
-      labelEvents(gl, b.name);
+      labelEvents(gl, b.name, { group: gk });
       el('path', { d: curve(sx(s, X.group), g.y + 9, sx(s, X.group + gw), g.y + 10 + rnd() * 2, 0.3), class: 'rs-under rs-under-g' }, bg);
       for (const p of g.problems) {
-        el('path', { d: curve(sx(s, X.group + gw + 4), g.y + 7, sx(s, X.leaf - 6), p.y, 0.6), class: 'rs-edge rs-edge-3', 'data-branch': b.name, style: `--c:${col}` }, gEdges);
-        const node = el('g', { class: 'rs-leaf' + (p.papers.length ? '' : ' rs-wip'), tabindex: '0', role: 'button', 'aria-label': `${p.name}: ${p.papers.length} ${p.papers.length === 1 ? 'paper' : 'papers'}` }, bg);
-        const t = el('text', { x: sx(s, X.leaf), y: p.y + 6, class: 'rs-tleaf', 'text-anchor': s === 'left' ? 'end' : 'start', transform: `rotate(${rnd() * 2.5} ${sx(s, X.leaf)} ${p.y})` }, node);
+        const lk = gk + '/' + p.name;
+        el('path', { d: curve(sx(s, X.group + gw + 4), g.y + 7, sx(s, X.leaf - 6), p.y, 0.6), class: 'rs-edge rs-edge-3', 'data-branch': b.name, 'data-leaf': lk, style: `--c:${col}` }, gEdges);
+        const node = el('g', { class: 'rs-leaf' + (p.papers.length ? '' : ' rs-wip'), 'data-leaf': lk, tabindex: '0', role: 'button', 'aria-label': `${p.name}: ${p.papers.length} ${p.papers.length === 1 ? 'paper' : 'papers'}` }, bg);
+        const rot = `rotate(${rnd() * 2.5} ${sx(s, X.leaf)} ${p.y})`;
+        const t = el('text', { x: sx(s, X.leaf), y: p.y + 6, class: 'rs-tleaf', 'text-anchor': s === 'left' ? 'end' : 'start', transform: rot }, node);
         t.textContent = p.name;
         if (p.papers.length) { const sup = el('tspan', { dy: -7, class: 'rs-sup' }, t); sup.textContent = ' ' + p.papers.length; }
         const lw = t.getComputedTextLength() + 2;
         const ux1 = sx(s, X.leaf), ux2 = sx(s, X.leaf + lw);
+        // highlighter swipe behind the label; shown when the branch is lit
+        const hl = el('rect', { x: Math.min(ux1, ux2) - 5, y: p.y - 9, width: Math.abs(ux2 - ux1) + 10, height: 22, rx: 5, class: 'rs-hl', transform: rot }, node);
+        node.insertBefore(hl, t);
         el('path', { d: curve(ux1, p.y + 10, ux2, p.y + 11 + rnd() * 2, 0.3), class: 'rs-under rs-under-l' }, node);
         // invisible hit area
         el('rect', { x: Math.min(ux1, ux2) - 6, y: p.y - 10, width: Math.abs(ux2 - ux1) + 12, height: 24, fill: 'transparent' }, node);
         nodes.push({ node, p, b, side: s, x: s === 'left' ? Math.min(ux1, ux2) : ux2, y: p.y });
-        node.addEventListener('pointerenter', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2); } });
+        const sel = { group: gk, leaf: lk };
+        node.addEventListener('pointerenter', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2, sel); } });
         node.addEventListener('pointerleave', () => { if (!pinned) scheduleHide(); });
-        node.addEventListener('focus', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2); } });
-        node.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pin(node); show(p, b, s, ux1, ux2); } });
-        node.addEventListener('click', (e) => { e.stopPropagation(); cancelHide(); pin(node); show(p, b, s, ux1, ux2); });
+        node.addEventListener('focus', () => { if (!pinned) { cancelHide(); show(p, b, s, ux1, ux2, sel); } });
+        node.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pin(node); show(p, b, s, ux1, ux2, sel); } });
+        node.addEventListener('click', (e) => { e.stopPropagation(); cancelHide(); pin(node); show(p, b, s, ux1, ux2, sel); });
       }
     }
   }
@@ -148,23 +155,31 @@ function build() {
   function cancelHide() { if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } }
   function pin(what) { pinned = what; svg.classList.add('rs-pinned'); }
   function unpin() { pinned = null; svg.classList.remove('rs-pinned'); }
-  function labelEvents(t, branchName) {
+  function labelEvents(t, branchName, sel) {
     t.classList.add('rs-clickable');
-    t.addEventListener('pointerenter', () => { if (!pinned) light(branchName); });
+    t.addEventListener('pointerenter', () => { if (!pinned) light(branchName, sel); });
     t.addEventListener('pointerleave', () => { if (!pinned) light(null); });
-    t.addEventListener('click', (e) => { e.stopPropagation(); pop.hidden = true; pin(t); light(branchName); });
+    t.addEventListener('click', (e) => { e.stopPropagation(); pop.hidden = true; pin(t); light(branchName, sel); });
   }
   pop.addEventListener('pointerenter', cancelHide);
   pop.addEventListener('pointerleave', () => { if (!pinned) scheduleHide(); });
   pop.addEventListener('click', (e) => e.stopPropagation());
-  function light(branchName) {
+  // light(branch) lights a whole branch; light(branch, {group}) one topic and its leaves; light(branch, {group, leaf}) one leaf.
+  function light(branchName, sel) {
     svg.classList.toggle('rs-focus', !!branchName);
-    svg.querySelectorAll('[data-branch]').forEach(e => e.classList.toggle('lit', e.dataset.branch === branchName));
+    svg.classList.toggle('rs-leafmode', !!sel);
+    const leafOn = (k) => !!sel && (sel.leaf ? k === sel.leaf : k.startsWith(sel.group + '/'));
+    svg.querySelectorAll('[data-branch]').forEach(e => {
+      let on = e.dataset.branch === branchName;
+      if (on && sel && e.classList.contains('rs-edge')) on = e.dataset.group ? e.dataset.group === sel.group : e.dataset.leaf ? leafOn(e.dataset.leaf) : true;
+      e.classList.toggle('lit', on);
+    });
+    svg.querySelectorAll('.rs-tgroup').forEach(e => e.classList.toggle('hot', !!sel && e.dataset.group === sel.group));
+    svg.querySelectorAll('.rs-leaf').forEach(e => e.classList.toggle('hot', leafOn(e.dataset.leaf)));
     document.querySelectorAll('.rs-chip').forEach(ch => ch.classList.toggle('lit', ch.dataset.branch === branchName));
   }
-  function show(p, b, side, ux1, ux2) {
-    light(b.name);
-    svg.querySelectorAll('.rs-leaf.hot').forEach(e => e.classList.remove('hot'));
+  function show(p, b, side, ux1, ux2, sel) {
+    light(b.name, sel);
     pop.innerHTML = '';
     const xb = document.createElement('button'); xb.className = 'rs-pop-close'; xb.setAttribute('aria-label', 'Close'); xb.textContent = '×';
     xb.addEventListener('click', () => { unpin(); hide(); }); pop.appendChild(xb);
@@ -173,7 +188,8 @@ function build() {
     const d = document.createElement('p'); d.className = 'rs-pop-blurb'; d.textContent = p.blurb; pop.appendChild(d);
     const lab = document.createElement('div'); lab.className = 'rs-pop-label';
     const nP = p.papers.filter(x => x.kind === 'paper').length, nS = p.papers.length - nP;
-    lab.textContent = !p.papers.length ? 'Work in progress' : nP && nS ? 'Papers and systems on it' : nS ? (nS === 1 ? 'The system built on it' : 'Systems built on it') : (nP === 1 ? 'The paper on it' : 'The papers on it'); pop.appendChild(lab);
+    const kinds = new Set(p.papers.map(x => x.kind));
+    lab.textContent = !p.papers.length ? 'Work in progress' : kinds.size > 1 ? 'The work on it' : kinds.has('thesis') ? 'My thesis work on it' : nS ? (nS === 1 ? 'The system built on it' : 'Systems built on it') : (nP === 1 ? 'The paper on it' : 'The papers on it'); pop.appendChild(lab);
     if (!p.papers.length) { const e = document.createElement('p'); e.className = 'rs-pop-blurb'; e.textContent = 'Nothing to show yet.'; pop.appendChild(e); }
     for (const paper of p.papers) {
       const row = document.createElement('div'); row.className = 'rs-pop-paper';
@@ -242,7 +258,21 @@ if (document.fonts && document.fonts.load) { document.fonts.load('600 20px Cavea
   /* Dim everything that is not the lit branch. */
   .rs-focus .rs-branch, .rs-focus .rs-edge { opacity: 0.22; transition: opacity 0.2s; }
   .rs-focus .rs-branch.lit { opacity: 1; }
-  .rs-focus .rs-edge-1.lit { opacity: 1; } .rs-focus .rs-edge-2.lit { opacity: 0.85; } .rs-focus .rs-edge-3.lit { opacity: 0.7; }
+  .rs-focus .rs-edge-1.lit { opacity: 1; stroke-width: 4; } .rs-focus .rs-edge-2.lit { opacity: 1; stroke-width: 2.6; } .rs-focus .rs-edge-3.lit { opacity: 1; stroke-width: 2; }
+
+  /* Highlighter look for the lit branch: marker swipe behind each leaf, bold dark topics. */
+  .rs-hl { fill: #f7d94c; opacity: 0; transition: opacity 0.2s; }
+  /* Whole branch (topic hover), or just the one leaf and its topic (leaf hover/click). */
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-hl, .rs-leafmode .rs-leaf.hot .rs-hl { opacity: 0.85; }
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-tleaf, .rs-leafmode .rs-leaf.hot .rs-tleaf { fill: #1a1a1a; font-weight: 600; font-style: normal; }
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-sup, .rs-leafmode .rs-leaf.hot .rs-sup { fill: #8a1f4c; }
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-under-l, .rs-leafmode .rs-leaf.hot .rs-under-l { opacity: 0; }
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-tgroup, .rs-leafmode .rs-tgroup.hot { fill: var(--text); font-weight: 600; }
+  .rs-focus:not(.rs-leafmode) .rs-branch.lit .rs-under-g { opacity: 1; stroke-width: 1.8; }
+  .rs-focus .rs-branch.lit .rs-tbranch { font-weight: 700; }
+  .rs-leafmode .rs-branch.lit .rs-leaf:not(.hot) { opacity: 0.45; }
+  .rs-leafmode .rs-branch.lit .rs-tgroup:not(.hot) { opacity: 0.45; }
+  [data-theme="dark"] .rs-hl { fill: #e8c940; }
 
   .rs-pop { position: absolute; z-index: 5; width: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-hover); padding: 12px 14px 10px; font-family: var(--font-sans); pointer-events: auto; }
   [data-theme="dark"] .rs-pop { border-color: rgba(255,255,255,0.14); }
