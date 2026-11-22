@@ -3,6 +3,7 @@
 // Rendered inside <head> by Layout.astro, early so even very short visits are recorded.
 // Mark an element with data-vt-context="Paper title" to add that title to everything clicked inside it, count the
 // time spent reading it and note when it scrolled into view; data-vt-section="Name" only counts reading time;
+// data-vt-focus="Name" on a popover or dialog takes the reading time while it is open (the research map's problems);
 // data-vt-event="Name" records clicks. Form contents are never recorded; search boxes are (there are none on this site).
 interface Props {
   endpoint: string;
@@ -18,7 +19,8 @@ const visitTrackerEndpoint = endpoint.replace(/\/+$/, '');
      on the clicked element, for the dashboard's click map.
      An element with data-vt-context="Paper title" adds that title to the events of everything inside it, counts
      the time spent reading it and notes when it scrolled into view; data-vt-section="Name" only counts reading
-     time; data-vt-event="Name" records clicks. */
+     time; data-vt-focus="Name" on a popover or dialog takes the reading time while it is open, wherever it is on
+     the screen; data-vt-event="Name" records clicks. */
   (function () {
     var endpoint = visitTrackerEndpoint;
     try {
@@ -184,6 +186,9 @@ const visitTrackerEndpoint = endpoint.replace(/\/+$/, '');
       window.addEventListener(type, input, { passive: true, capture: true });
     });
     function readingNow() {
+      /* An open popover or dialog ([data-vt-focus], e.g. a problem on the research map) is what is being read. */
+      var focus = document.querySelector("[data-vt-focus]:not([hidden])");
+      if (focus && focus.getClientRects().length) return clean(focus.getAttribute("data-vt-focus"), 150);
       var y = window.innerHeight * 0.4;
       var el = document.elementFromPoint(window.innerWidth / 2, y);
       var holder = el && el.closest ? el.closest("[data-vt-section], [data-vt-context]") : null;
@@ -426,6 +431,19 @@ const visitTrackerEndpoint = endpoint.replace(/\/+$/, '');
       );
       var papers = document.querySelectorAll("[data-vt-context]");
       for (var i = 0; i < papers.length; i++) observer.observe(papers[i]);
+      /* Papers added to the page later, such as the ones listed in a popover of the research map. */
+      if (!window.MutationObserver) return;
+      new MutationObserver(function (changes) {
+        changes.forEach(function (change) {
+          for (var i = 0; i < change.addedNodes.length; i++) {
+            var node = change.addedNodes[i];
+            if (node.nodeType !== 1) continue;
+            if (node.hasAttribute("data-vt-context")) observer.observe(node);
+            var inside = node.querySelectorAll("[data-vt-context]");
+            for (var j = 0; j < inside.length; j++) observer.observe(inside[j]);
+          }
+        });
+      }).observe(document.body, { childList: true, subtree: true });
     }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", watchSeen);
     else watchSeen();

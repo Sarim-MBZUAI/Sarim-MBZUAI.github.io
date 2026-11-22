@@ -2653,6 +2653,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
             <div class="seg seg-small" role="group" aria-label="Show" id="activity-tabs">
               <button type="button" data-tab="actions">actions</button>
               <button type="button" data-tab="reading">reading</button>
+              <button type="button" data-tab="map">research map</button>
               <button type="button" data-tab="searches">searches</button>
               <button type="button" data-tab="engagement">engagement</button>
               <button type="button" data-tab="problems">problems</button>
@@ -2873,7 +2874,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         try {
           const saved = JSON.parse(localStorage.getItem("visitors-tabs") || "{}");
           return {
-            tab: ["actions", "reading", "searches", "engagement", "problems"].includes(saved.tab)
+            tab: ["actions", "reading", "map", "searches", "engagement", "problems"].includes(saved.tab)
               ? saved.tab
               : saved.tab === "scrolling"
                 ? "engagement"
@@ -3936,15 +3937,31 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         }
       }
 
+      // Reading time on the research map (/work) is named "Branch › Problem" (see data-vt-focus in the tracker).
+      const isResearchMap = (path) => /^\/work\/?$/.test(path || "");
+      const onResearchMap = (r) => r.pages === 1 && isResearchMap(r.path);
+
       function renderActivity() {
         const summary = summaryData;
         const t = summary.totals;
         const tab = state.tab;
         for (const b of document.querySelectorAll("#activity-tabs button")) b.setAttribute("aria-pressed", String(b.dataset.tab === tab));
         const note = $("#activity-note");
-        if (tab === "reading") {
+        if (tab === "map") {
+          note.textContent =
+            "problems on “What I work on” that a visitor kept open for 3 seconds or more, with the average time spent on each · click one for the visits";
+          renderList("activity", summary.reading.filter(onResearchMap), {
+            label: (r) => {
+              const [branch, problem] = r.name.split(" › ");
+              return problem ? [problem, h("span", { class: "tag" }, branch)] : r.name;
+            },
+            sub: (r) => [plural(r.visitors, "visitor"), `${duration(r.avg_seconds)} on average`].join(" · "),
+            filter: (r) => ({ event: r.name }),
+            empty: "nobody has opened a problem on the research map in this selection",
+          });
+        } else if (tab === "reading") {
           note.textContent = "papers and sections in the middle of the screen while the visitor was active, with the average time spent on each";
-          renderList("activity", summary.reading, {
+          renderList("activity", summary.reading.filter((r) => !onResearchMap(r)), {
             label: (r) => r.name,
             sub: (r) =>
               [
@@ -4465,7 +4482,9 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         const top = path.split("/")[1];
         if (top === "blog") return path === "/blog/" ? "blog" : "post";
         if (/^\d{4}$/.test(top)) return "post";
-        return ["publications", "cv", "contact", "teaching", "projects", "books", "news", "people", "repositories"].includes(top) ? top : "other";
+        return ["publications", "work", "experience", "awards", "cv", "contact", "teaching", "projects", "books", "news", "people", "repositories"].includes(top)
+          ? top
+          : "other";
       }
       function pageName(p) {
         if (p.status === 404) return `a missing page (${p.path})`;
@@ -4566,7 +4585,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
         { key: "research", label: "reading your research" },
         { key: "search", label: "searching for something" },
         { key: "blog", label: "reading your blog" },
-        { key: "work", label: "looking at teaching / projects" },
+        { key: "work", label: "looking at your projects" },
         { key: "about", label: "reading about you" },
         { key: "browse", label: "browsing" },
         { key: "quick", label: "quick look" },
@@ -4593,6 +4612,8 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
           const time = p.active ?? p.seconds ?? 0;
           if (kind === "missing") add("broken", `opened ${p.path}, which doesn't exist`);
           if (kind === "cv") add("background", "opened your CV");
+          if ((kind === "experience" || kind === "awards") && time >= 5) add("background", `looked at your ${kind}`);
+          if (kind === "work" && time >= 15) add("research", `spent ${duration(time)} on your research map`);
           if (kind === "contact") add("contact", "opened your contact page");
           if (kind === "post" && time >= 20) add("blog", `read ${quote(pageName(p))} for ${duration(time)}`);
           if ((kind === "teaching" || kind === "projects") && time >= 5) add("work", `looked at your ${kind}`);
@@ -4614,7 +4635,7 @@ const apiUrl = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled ?
             else if (e.type === "rage" || e.type === "dead") add("stuck", lowerFirst(e.text));
             else if ((e.type === "expand" || e.type === "custom" || e.type === "video") && e.paper)
               add("research", `${lowerFirst(e.text)} of ${quote(e.paper)}`);
-            else if (e.type === "read" && e.paper && (!longestRead || e.seconds > longestRead.seconds)) longestRead = e;
+            else if (e.type === "read" && (e.paper || kind === "work") && (!longestRead || e.seconds > longestRead.seconds)) longestRead = e;
           }
         }
         if (longestRead && longestRead.seconds >= 20) add("research", `read ${quote(longestRead.name)} for ${duration(longestRead.seconds)}`);

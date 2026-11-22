@@ -2,7 +2,7 @@
 
 Personal academic site of Sarim Hashmi (Research Engineer, MBZUAI), live at **https://sarim-mbzuai.github.io**.
 
-A static [Astro](https://astro.build) site deployed to GitHub Pages, with a self-hosted **visit tracker** that shows which universities and organizations read the site, which papers they looked at and for how long. The tracker runs on Cloudflare's free plan, sets no cookies, and keeps the data in your own account.
+A static [Astro](https://astro.build) site deployed to GitHub Pages, with a self-hosted **visit tracker** that shows which universities and organizations read the site, which papers and research problems they looked at and for how long. The tracker runs on Cloudflare's free plan, sets no cookies, and keeps the data in your own account.
 
 ---
 
@@ -29,8 +29,8 @@ A static [Astro](https://astro.build) site deployed to GitHub Pages, with a self
 
 - **Framework**: Astro 4, static output (`output: 'static'` in `astro.config.mjs`)
 - **Styling**: vanilla CSS with custom properties in `public/styles/global.css`
-- **Fonts**: Instrument Serif (display), Newsreader (serif), Manrope (sans), from Google Fonts
-- **Theme**: light/dark toggle, persisted in `localStorage` under the key `theme`
+- **Fonts**: Instrument Serif (display), Newsreader (serif), Manrope (sans), from Google Fonts; Caveat for the hand-drawn research map
+- **Theme**: light/dark toggle, persisted in `localStorage` under the key `theme`; green accent (`--accent` in `global.css`, `#15803d` light, `#4ade80` dark). The tracker dashboard has its own neon theme and only shares the toggle
 - **Backdrop**: dependency-free canvas animation (`public/assets/js/bg.js`) and ASCII scenes (`public/assets/js/scenes.js`)
 - **Analytics**: the self-hosted visit tracker described below (Cloudflare Worker + D1). `Layout.astro` also still loads GoatCounter in production builds; remove that `<script>` if you no longer want it.
 - **Deploy**: GitHub Actions → GitHub Pages (`.github/workflows/deploy.yml`)
@@ -40,7 +40,8 @@ A static [Astro](https://astro.build) site deployed to GitHub Pages, with a self
 ```
 src/
 ├── pages/
-│   ├── index.astro             # Home: bio, news, featured publications
+│   ├── index.astro             # Home: bio, news (with logos), featured publications
+│   ├── work.astro              # "What I work on": research map drawn from research.json (tagged for the tracker)
 │   ├── publications.astro      # All publications
 │   ├── experience.astro        # Work experience
 │   ├── projects.astro          # Projects
@@ -64,11 +65,14 @@ src/
     ├── experience.json
     ├── projects.json
     ├── awards.json
-    ├── news.json
+    ├── news.json               # logo: file name in public/images/news/, without .png
+    ├── research.json           # Research map: centre, branches → topics → problems → papers
     └── visit-tracker.json      # Tracker on/off switch and the Worker URL
 
 public/
 ├── images/profile.jpg
+├── images/news/                # Logos shown next to news items
+├── images/publications/        # Paper thumbnails and GIFs
 ├── styles/global.css
 └── assets/js/{bg.js, scenes.js}
 
@@ -100,7 +104,8 @@ In development the site talks to a **local** tracker on `http://localhost:8787`,
 - **Experience**: `src/data/experience.json`. `link` is a URL or `null`; bullet text supports `[text](url)` links.
 - **Projects**: `src/data/projects.json`.
 - **Awards**: `src/data/awards.json` (`title`, `description`, `date`).
-- **News**: `src/data/news.json` (newest first; `isNew` highlights an entry).
+- **News**: `src/data/news.json` (newest first; `isNew` highlights an entry; `logo` names a PNG in `public/images/news/`).
+- **Research map**: `src/data/research.json`. Each branch has a `name`, a `color` and a `side` (`left` or `right`), then `groups` (topics) of `problems`. A problem has a `name`, a one-sentence `blurb` and `papers`: the start of a publication's title as written in `publications.json`, or `@key` for an entry under `projects` (systems and thesis work). An empty list shows the leaf as work in progress. The build fails if a title prefix matches no publication.
 - **Bio**: the `<section class="about-section">` block in `src/pages/index.astro`.
 
 ## Deployment
@@ -124,6 +129,7 @@ Each page view is reported to a small Cloudflare Worker, which stores it in a D1
 | Location                 | City, region, postcode, country, coordinates (from the IP, city-level)     |
 | Page                     | Path and title, time on screen, time actively reading, scroll depth        |
 | What they did            | Which paper or section they read and for how long, downloads, links, email clicks, forms, videos, copied text |
+| Research map             | Which problems on "What I work on" were opened, and for how long           |
 | Whole visits             | The pages of one visit in order, and whether the visitor came before       |
 | Papers seen              | Which papers scrolled into view, read or not                               |
 | Clicks                   | Where on the page people click (click map), dead clicks, rage clicks       |
@@ -133,17 +139,17 @@ Each page view is reported to a small Cloudflare Worker, which stores it in a D1
 | Device                   | Desktop / mobile / tablet, OS, browser, screen size, language              |
 | IP address               | Kept 365 days, then erased automatically                                   |
 
-Nothing typed on the site is ever recorded, nor mouse movements. Bots and headless browsers are dropped.
+Nothing typed into a form is ever recorded, nor mouse movements. Bots and headless browsers are dropped.
 
 The private dashboard lives at **https://sarim-mbzuai.github.io/visitors/** (password protected, not linked, not indexed). The full feature list, screenshots and the reasoning behind the design are in [visit-tracker/README.md](visit-tracker/README.md).
 
 <p align="center">
-  <img src="visit-tracker/docs/dashboard.png" alt="The visitors dashboard" width="880">
+  <img src="visit-tracker/docs/dashboard.png" alt="The visitors dashboard, in its neon dark theme" width="880">
 </p>
 
 ### How it is wired into the site
 
-Four files on the site side, one of which is configuration:
+Four files on the site side, one of which is configuration, plus a few tags on the pages:
 
 1. **`src/data/visit-tracker.json`**, the switch:
 
@@ -156,11 +162,13 @@ Four files on the site side, one of which is configuration:
 
    `enabled: false` or an empty `url` removes the snippet, the map and the dashboard's connection from the build. In `npm run dev` the URL is ignored and `http://localhost:8787` is used instead.
 
-2. **`src/components/VisitTracker.astro`**, the snippet. `Layout.astro` renders it in `<head>` of every page when the switch is on. It sends a `/hit` beacon on load and `/leave` beacons with time on page, active time, scroll depth and the activity since the last report. Elements marked `data-vt-context="Title"` (every publication and experience entry) get reading time and clicks attributed to that title; `data-vt-section="Name"` counts reading time only; `data-vt-event="Name"` records clicks on one element.
+2. **`src/components/VisitTracker.astro`**, the snippet. `Layout.astro` renders it in `<head>` of every page when the switch is on. It sends a `/hit` beacon on load and `/leave` beacons with time on page, active time, scroll depth and the activity since the last report. Elements marked `data-vt-context="Title"` (every publication and experience entry) get reading time and clicks attributed to that title; `data-vt-section="Name"` counts reading time only; `data-vt-focus="Name"` on an open popover takes the reading time while it is open; `data-vt-event="Name"` records clicks on one element.
 
-3. **`src/pages/visitors.astro`**, the dashboard. A self-contained page served at `/visitors/`. It reads the Worker URL from a `<meta>` tag, asks for the password, and then calls the Worker's `/api/*` endpoints with a signed token kept in `localStorage` for 30 days.
+3. **`src/pages/visitors.astro`**, the dashboard. A self-contained page served at `/visitors/`, with its own neon theme. It reads the Worker URL from a `<meta>` tag, asks for the password, and then calls the Worker's `/api/*` endpoints with a signed token kept in `localStorage` for 30 days. It knows the site's pages by path: time on `/work` or `/publications` reads as research interest, `/experience` and `/awards` as a background check, `/contact` as trying to reach you.
 
 4. **`src/components/VisitorMap.astro`**, the public map on the contact page. It reads the Worker's `/map` endpoint, which returns only city-level counts.
+
+**The research map (`src/pages/work.astro`)** is the one page that reports through the tags itself, because its content lives in hover cards. The open card carries `data-vt-focus="Branch › Problem"`, each paper listed in it carries `data-vt-context`, and the branch chips and labels carry `data-vt-event`. The dashboard shows the result under **what visitors did → research map**. A new page type with its own top-level path should be added to `pageKind()` in `visitors.astro` so that visits to it are given a reason.
 
 ### The Cloudflare side
 
@@ -261,7 +269,7 @@ All commands run from `visit-tracker/`.
 
 **Testing locally.** Run `npm run password:local` once (writes a hash to `.dev.vars`, which is git-ignored), then `npm run dev` for a local Worker with a local database on `http://localhost:8787`. In the repository root run `npm run dev` and open `http://localhost:4321/visitors/`. The local database starts empty.
 
-**Updating the code from upstream.** The Worker, dashboard and classifier were ported from [atifquamar07/atifquamar07.github.io](https://github.com/atifquamar07/atifquamar07.github.io) (MIT). To pull a newer version: copy `visit-tracker/src/*.js` and any new `migrations/*.sql` verbatim, regenerate `src/pages/visitors.astro` from the upstream `_pages/visitors.html` (Astro frontmatter, `is:inline` scripts, `is:global` style, your name and domain, then the "site theme" block at the end of the stylesheet), copy the body of `_includes/visit_tracker.liquid` into `VisitTracker.astro`, and run `npm run deploy`.
+**Updating the code from upstream.** The Worker, dashboard and classifier were ported from [atifquamar07/atifquamar07.github.io](https://github.com/atifquamar07/atifquamar07.github.io) (MIT). To pull a newer version: copy `visit-tracker/src/*.js` and any new `migrations/*.sql` verbatim, regenerate `src/pages/visitors.astro` from the upstream `_pages/visitors.html` (Astro frontmatter, `is:inline` scripts, `is:global` style, your name and domain, then the "cyberpunk theme" block at the end of the stylesheet), copy the body of `_includes/visit_tracker.liquid` into `VisitTracker.astro`, and run `npm run deploy`. Then re-apply what is local to this site: in the dashboard, the *research map* tab, the page kinds and the two extra reasons in `intentsOf()`; in the snippet, `data-vt-focus` in `readingNow()` and the observer for tagged elements added after load.
 
 ### Turning it off or deleting it
 
@@ -281,6 +289,18 @@ The tracker sets no cookies. The dashboard keeps its sign-in token and the "don'
 ---
 
 ## Changelog
+
+**2026-11-22** — Tracker follows the research map
+- Snippet: an open popover marked `data-vt-focus` takes the reading time; tagged elements added after load are watched too
+- `/work`: problem cards, the papers in them and the branch labels carry the tracker's tags
+- Dashboard: *research map* tab under "what visitors did"; time on the research map counts as reading your research, experience and awards as checking your background
+- Both READMEs and the tracker screenshots brought up to date
+
+**2026-11-11 to 2026-11-20** — Site refresh
+- Green theme; rewritten bio; logos next to news items; MolCluster hackathon award
+- "What I work on": a research map of problems and the papers behind them (`work.astro`, `research.json`)
+
+**2026-11-07** — Cyberpunk theme for the tracker dashboard (neon dark mode, chrome-and-pink light mode)
 
 **2026-10-28** — Insights, click map, AI summaries
 - Dashboard: why people came, per-paper funnel (seen → read → links), how visitors moved through the site, "worth a closer look", referrer kinds, click map, whole-visit stories

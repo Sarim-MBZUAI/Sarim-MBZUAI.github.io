@@ -1,16 +1,16 @@
 # Who is reading your website?
 
-**A self-hosted visitor log for academic websites.** It tells you *which universities* open your site, which pages they read, how long they stay, and where they came from. It runs on Cloudflare's free plan, sets no cookies, and the data never leaves your own account.
+**A self-hosted visitor log for academic websites.** It tells you *which universities* open your site, which papers and research problems they read, how long they stay, and where they came from. It runs on Cloudflare's free plan, sets no cookies, and the data never leaves your own account.
 
 <p align="center">
-  <img src="docs/dashboard.png" alt="The visitors dashboard: page views, unique visitors, organizations, academic organizations, countries, time on page, a 30-day chart and a world map" width="960">
+  <img src="docs/dashboard.png" alt="The visitors dashboard in its neon dark theme: page views, unique visitors, organizations, academic organizations, countries, time on page, a 30-day chart and a world map" width="960">
 </p>
 
 Google Analytics tells you *"1 visitor from Cambridge, Massachusetts"*. This tells you:
 
-> **Massachusetts Institute of Technology** · `dhcp-18-9-44-120.dyn.mit.edu` · read **/publications** for 3 min 10 s · came from **scholar.google.com** · Tuesday 14:03, their time
+> **Massachusetts Institute of Technology** · `dhcp-18-9-44-120.dyn.mit.edu` · read **/publications** for 3 min 10 s · opened **Agent security › Hidden orders in pages** on the research map · came from **scholar.google.com** · Tuesday 14:03, their time
 
-If you are applying for PhDs, postdocs or faculty jobs, that difference matters. You can see when a lab you emailed actually opened your page, which publication they looked at, and whether they came back.
+If you are applying for PhDs, postdocs or faculty jobs, that difference matters. You can see when a lab you emailed actually opened your page, which publication and which research problem they looked at, and whether they came back.
 
 *All screenshots in this file show synthetic demo data, not real visitors.*
 
@@ -29,6 +29,7 @@ One row per page view:
 | Location               | City, region, postcode, country, latitude/longitude                       |
 | Page                   | Path and title, how long it was on screen and how much of that was active |
 | What they did          | Papers and sections read (with time), downloads, links, videos, figures   |
+| Research map           | Which problems on "What I work on" a visitor opened, and for how long     |
 | Papers seen            | Which papers were on screen for at least a second, read or not            |
 | Clicks                 | Where on the page each click landed, clicks on things that aren't links, and clicks repeated in frustration |
 | AI summary             | Optional: a sentence or two on what each visit was after, and who the visitor might be, written by Gemini once the visit is over |
@@ -38,7 +39,7 @@ One row per page view:
 | Device                 | Desktop / mobile / tablet, OS, browser, screen size, language             |
 | IP address             | Kept for 365 days, then erased automatically (configurable)               |
 
-It never records names, emails, mouse movements or anything typed on the site (forms are recorded only by name when sent; search boxes not at all).
+It never records names, emails, mouse movements or anything typed into a form (forms are recorded only by name when sent). What is typed into a site search box would be recorded as a search; this site has none.
 
 ## How it knows it was a university
 
@@ -61,8 +62,24 @@ Three signals, combined:
 Every publication and experience entry on the site is marked with `data-vt-context="<title>"`. While that entry is in the middle of the screen and the visitor is active (scrolling, moving the mouse, typing), the seconds are credited to that title, and any click inside it (the PDF, the code link, arXiv) is recorded as "Downloaded … · <title>" or "Opened arxiv.org · <title>". The dashboard then lists papers by how often and how long they were read. On other pages, the h2/h3 heading above the middle of the screen is used instead. To tag anything else, add `data-vt-context` (reading time and clicks) or `data-vt-section` (reading time only) to its container, or `data-vt-event="Name"` to a single link or button.
 
 <p align="center">
-  <img src="docs/reading.png" alt="Reading: each paper with how many visitors read it and the average time spent on it" width="960">
+  <img src="docs/reading.png" alt="Reading: each paper with how many visitors read it and the average time spent on it" width="620">
 </p>
+
+## Which problem did they explore?
+
+The site's **What I work on** page (`/work`) is a mind map: a field in the middle, branches for topics, and a leaf for each problem. Hovering or tapping a leaf opens a card with the problem and the papers on it. Nothing there sits "in the middle of the screen", so the map reports what is open instead:
+
+- **The open card takes the reading time.** While a problem's card is open it carries `data-vt-focus="Branch › Problem"`, and the visitor's active seconds go to that name wherever the card is on the screen. Three seconds or more is recorded.
+- **Papers in the card count as papers.** Each one is tagged with `data-vt-context`, exactly as on the publications page, so "came into view" and "Opened arxiv.org · <title>" land in the same per-paper table. The tracker also watches for tagged elements that are added to a page after it loads, which is how these cards are picked up.
+- **Branches and topics** clicked to keep them lit are recorded as "Highlighted the … branch" through `data-vt-event`.
+
+The dashboard lists the problems under **what visitors did → research map**, and a visit that spends time there counts as *reading your research*.
+
+<p align="center">
+  <img src="docs/research-map.png" alt="Research map: each problem on the map with its branch, how many visitors opened it and the average time they kept it open" width="620">
+</p>
+
+Any popover or dialog on your own site works the same way: give it `data-vt-focus="Name"` while it is open and hide it with the `hidden` attribute when it is not.
 
 ## The dashboard
 
@@ -75,30 +92,35 @@ A private page at **`/visitors/`** on your own site. It is not linked anywhere a
 - **Filters**: last 24 hours, 7, 30, 90 days or 12 months; *universities & research only*; *hide cloud, VPN & proxies*; free-text search over organization, city, postcode, page and IP.
 - **Click anything** (an organization, a city, a country, a page, a referrer, a circle on the map) to filter everything else to it.
 - **All pages by this visitor** shows one person's path through your site.
-- **Why people came**: each visit's likely reason (citing a paper, getting a paper, looking for code, trying to reach you, checking your background, reading your research, …), worked out from what the visitor did. Hover a reason for the evidence; click one to see those visits, each told in one line.
+- **Why people came**: each visit's likely reason (citing a paper, getting a paper, looking for code, trying to reach you, checking your background, reading your research, …), worked out from what the visitor did. Time on the research map counts as reading your research; the experience and awards pages count as checking your background. Hover a reason for the evidence; click one to see those visits, each told in one line.
+
+<p align="center">
+  <img src="docs/intents.png" alt="Why people came: reasons such as reading about you, reading your research and trying to reach you, each with the number of visitors and an example" width="620">
+</p>
+
 - **Papers**: for each paper, how many people it came into view for, read it (and for how long), opened its links or code, and clicked its title expecting a link.
 - **How visitors moved through the site**: first pages (and how many left right away), where they went from each page, last pages, and whole paths.
 - **Worth a closer look**: universities, labs and companies whose network names them and who did more than glance: cited, downloaded, got in touch, read seriously or came back. Strongest interest first.
 - **Came from** groups where visits started by kind of site: search engine, research site (Scholar, arXiv, Semantic Scholar, …), AI assistant (ChatGPT, Perplexity, …), code, social, email, direct.
 - **Click map**: where visitors clicked on a page, drawn over the page as it looks now, for computers or phones.
-- **What visitors did**: *actions* (downloads, links to other sites, videos, figures, …), *reading* (each paper and section, with the average time spent on it), *scrolling*, and *problems* (broken links to the site, with where the link was, and JavaScript errors). Click a row to see the visits where it happened.
+- **What visitors did**: *actions* (downloads, links to other sites, videos, figures, …), *reading* (each paper and section, with the average time spent on it), *research map* (each problem opened on "What I work on"), *searches*, *engagement* (active time and pages per visit, how far long pages were scrolled), and *problems* (broken links to the site, with where the link was, JavaScript errors, and clicks on things that didn't respond). Click a row to see the visits where it happened.
 - **Show details** under a visit lists everything the visitor did on that page, the other pages of the same visit, and when they came before. **Whole visits** at the top of "every visit" lists visits instead of single page views.
 <p align="center">
-  <img src="docs/activity.png" alt="What visitors did: downloads, links to other sites, email clicks" width="960">
+  <img src="docs/activity.png" alt="What visitors did: email clicks and links to other sites, each with the number of visitors" width="620">
 </p>
 
 - **Reloads are merged**: opening the same page again within 30 minutes updates the visit instead of adding a new row.
 - **Live count** of visitors in the last five minutes.
 - **Export CSV** of every visit in the current filter.
 - **The view is kept in the URL**, so you can bookmark *"academic visitors, last 90 days"*.
-- **Dark mode**, following your site's theme.
+- **Its own look**: a neon, cyberpunk-style theme. Dark mode is cyan and magenta on a night grid; light mode is chrome and hot pink. It opens in whichever mode you last picked on the site, and the toggle is shared.
 
 <p align="center">
   <img src="docs/visits.png" alt="Every visit, with one visit opened: what they did on the page, the other pages of the same visit, and when this visitor came before" width="960">
 </p>
 
 <p align="center">
-  <img src="docs/dashboard-dark.png" alt="The same dashboard in dark mode" width="600">
+  <img src="docs/dashboard-light.png" alt="The same dashboard in light mode" width="760">
 </p>
 
 ## AI summaries (optional)
@@ -159,7 +181,8 @@ The script is safe to re-run; every step skips work that is already done.
 This repository is an [Astro](https://astro.build) site, but nothing in the tracker depends on Astro.
 
 - **Astro**: copy `visit-tracker/`, `src/components/VisitTracker.astro`, `src/components/VisitorMap.astro`, `src/pages/visitors.astro` and `src/data/visit-tracker.json`. Render `<VisitTracker endpoint={…} />` in the `<head>` of your layout (see `src/layouts/Layout.astro`). Put your domain in `ALLOWED_ORIGINS` in `visit-tracker/wrangler.toml`.
-- **Jekyll, Hugo, plain HTML, anything else**: the page snippet is 40 lines of plain JavaScript (the body of `VisitTracker.astro`) and the dashboard is one self-contained HTML page (`visitors.astro` minus its five-line frontmatter). Paste the snippet into your base template with your Worker URL, serve the dashboard at `/visitors/`, and set `ALLOWED_ORIGINS`.
+- **Jekyll, Hugo, plain HTML, anything else**: the page snippet is one self-contained script of plain JavaScript (the body of `VisitTracker.astro`) and the dashboard is one self-contained HTML page (`visitors.astro` minus its five-line frontmatter). Paste the snippet into your base template with your Worker URL, serve the dashboard at `/visitors/`, and set `ALLOWED_ORIGINS`.
+- **The dashboard knows this site's pages.** `pageKind()` and `intentsOf()` in `visitors.astro` map `/work`, `/publications`, `/experience`, `/awards`, `/projects` and `/contact` to reasons for a visit, and the *research map* tab reads the `/work` page. Rename those paths to your own, or drop the tab if you have no such page.
 
 Each page view costs two Worker requests and at most three database writes. Cloudflare's free plan allows 100,000 requests and 100,000 writes per day, so an academic site uses a small fraction of it. If you ever exceed it, visits for the rest of that day are simply not recorded; the website itself is unaffected.
 
@@ -212,6 +235,7 @@ contact page ──GET /map (public, city-level only)
 | `../src/data/visit-tracker.json`       | Worker URL and on/off switch used by the site                            |
 | `../src/pages/visitors.astro`          | The dashboard page at /visitors/                                         |
 | `../src/components/VisitTracker.astro` | The snippet added to every page (from `Layout.astro`)                    |
+| `../src/pages/work.astro`              | The research map; its cards, papers and branches carry the tracker's tags |
 | `../src/components/VisitorMap.astro`   | The world map on the contact page                                        |
 
 ## Credits

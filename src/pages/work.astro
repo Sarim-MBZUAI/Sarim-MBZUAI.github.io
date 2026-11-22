@@ -39,7 +39,7 @@ const data = { centre: research.centre, branches, nProblems, nPapers };
     </p>
     <div class="rs-legend" id="rs-legend">
       {perBranch.map((b) => (
-        <button class="rs-chip" data-branch={b.name} style={`--c:${b.color}`}><i></i>{b.name}{b.n > 0 && <sup>{b.n}</sup>}</button>
+        <button class="rs-chip" data-branch={b.name} data-vt-event={`Highlighted the ${b.name} branch`} style={`--c:${b.color}`}><i></i>{b.name}{b.n > 0 && <sup>{b.n}</sup>}</button>
       ))}
     </div>
 
@@ -157,6 +157,8 @@ function build() {
   function unpin() { pinned = null; svg.classList.remove('rs-pinned'); }
   function labelEvents(t, branchName, sel) {
     t.classList.add('rs-clickable');
+    // For the visit tracker: which branch or topic a visitor clicked to keep lit.
+    t.setAttribute('data-vt-event', sel ? `Highlighted the topic ${t.textContent}` : `Highlighted the ${branchName} branch`);
     t.addEventListener('pointerenter', () => { if (!pinned) light(branchName, sel); });
     t.addEventListener('pointerleave', () => { if (!pinned) light(null); });
     t.addEventListener('click', (e) => { e.stopPropagation(); pop.hidden = true; pin(t); light(branchName, sel); });
@@ -180,6 +182,8 @@ function build() {
   }
   function show(p, b, side, ux1, ux2, sel) {
     light(b.name, sel);
+    // For the visit tracker: while this card is open, the reading time goes to this problem.
+    pop.setAttribute('data-vt-focus', b.name + ' › ' + p.name);
     pop.innerHTML = '';
     const xb = document.createElement('button'); xb.className = 'rs-pop-close'; xb.setAttribute('aria-label', 'Close'); xb.textContent = '×';
     xb.addEventListener('click', () => { unpin(); hide(); }); pop.appendChild(xb);
@@ -193,6 +197,8 @@ function build() {
     if (!p.papers.length) { const e = document.createElement('p'); e.className = 'rs-pop-blurb'; e.textContent = 'Nothing to show yet.'; pop.appendChild(e); }
     for (const paper of p.papers) {
       const row = document.createElement('div'); row.className = 'rs-pop-paper';
+      // For the visit tracker: links opened here count for the paper, as on the publications page.
+      if (paper.kind === 'paper') row.setAttribute('data-vt-context', paper.title);
       const t = document.createElement(paper.url ? 'a' : 'span'); t.className = 'rs-pop-ptitle'; t.textContent = paper.title;
       if (paper.url) { t.href = paper.url; t.target = '_blank'; t.rel = 'noopener'; }
       const v = document.createElement('div'); v.className = 'rs-pop-venue'; v.textContent = paper.venue + ' · ' + paper.status;
