@@ -46,7 +46,7 @@
 
     var PARALLAX = 0.4;         /* backdrop scrolls at 40% of page speed */
 
-    var HOLD_DELAY = 4; // seconds a press must last before the charge and burst activate
+    var HOLD_DELAY = 2; // seconds a press must last before the charge and burst activate
 
     function docHeight() {
       var b = document.body, e = document.documentElement;
