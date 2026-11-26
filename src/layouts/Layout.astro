@@ -9,6 +9,8 @@ interface Props {
 const { title, description = "Sarim Hashmi — Research Engineer at MBZUAI. Secure, private, and strategic machine learning, with a focus on the security of LLM agents that use retrieval, memory, and tools." } = Astro.props;
 // Self-hosted visit tracker (see visit-tracker/README.md). In `npm run dev` it reports to a local Worker on :8787.
 const trackerEndpoint = import.meta.env.DEV ? 'http://localhost:8787' : tracker.enabled && tracker.url ? tracker.url : '';
+// Build stamp appended to the inline scripts so a deploy is never served from a stale browser cache.
+const build = Date.now().toString(36);
 ---
 
 <!doctype html>
@@ -59,8 +61,8 @@ const trackerEndpoint = import.meta.env.DEV ? 'http://localhost:8787' : tracker.
       })();
     </script>
     <!-- Ambient proximity-graph canvas backdrop (theme-aware, self-booting) -->
-    <script is:inline src="/assets/js/bg.js"></script>
+    <script is:inline src={`/assets/js/bg.js?v=${build}`}></script>
     <!-- ASCII scenes -->
-    <script is:inline src="/assets/js/scenes.js"></script>
+    <script is:inline src={`/assets/js/scenes.js?v=${build}`}></script>
   </body>
 </html>
