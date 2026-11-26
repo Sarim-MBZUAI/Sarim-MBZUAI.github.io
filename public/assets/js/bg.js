@@ -46,6 +46,8 @@
 
     var PARALLAX = 0.4;         /* backdrop scrolls at 40% of page speed */
 
+    var HOLD_DELAY = 4; // seconds a press must last before the charge and burst activate
+
     function docHeight() {
       var b = document.body, e = document.documentElement;
       return Math.max(b ? b.scrollHeight : 0, e ? e.scrollHeight : 0,
@@ -274,10 +276,11 @@
           if (dn <= pu.r && dn > pu.r - band) nodes[ni].heat = Math.max(nodes[ni].heat, Math.min(1, k * pu.gain));
         }
       }
-      if (charge) {
+      if (charge && s - charge.start >= HOLD_DELAY) {
         /* a cluster of sparks that grows and jitters while you hold; once
-           fully charged it breathes */
-        var held = s - charge.start, c = Math.min(1, held / 0.6);
+           fully charged it breathes. Nothing shows until the press has lasted
+           HOLD_DELAY seconds, so ordinary clicks and drags stay quiet. */
+        var held = s - charge.start - HOLD_DELAY, c = Math.min(1, held / 0.6);
         var cxp = charge.x, cyp = charge.y + scrollY() * PARALLAX;
         var rad = 5 + 18 * c + (c >= 1 ? Math.sin(s * 9) * 2.5 : 0);
         var nd = 6 + Math.round(8 * c);
@@ -345,9 +348,10 @@
       else if (Math.abs(docHeight() - DOC) > VH) onResize();
     }, { passive: true });
     document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
-    // Press anywhere to charge, release to send a signal through the graph
-    // from that spot. A quick tap is a small pulse; holding for ~0.6 s gives
-    // a bigger, faster, brighter one. The charge rides along with the pointer.
+    // Press and hold anywhere for HOLD_DELAY seconds to start charging, then
+    // release to send a signal through the graph from that spot. The charge
+    // grows for a further ~0.6 s; releasing earlier than HOLD_DELAY does
+    // nothing. The charge rides along with the pointer.
     window.addEventListener('pointerdown', function (ev) {
       if (reduce) return;
       if (ev.pointerType === 'mouse' && ev.button !== 0) return;
@@ -359,8 +363,8 @@
     }, { passive: true });
     function release() {
       if (!charge) return;
-      var held = performance.now() / 1000 - charge.start;
-      pulseAt(charge.x, charge.y, Math.max(0.15, Math.min(1, held / 0.6)));
+      var held = performance.now() / 1000 - charge.start - HOLD_DELAY;
+      if (held >= 0) pulseAt(charge.x, charge.y, Math.max(0.15, Math.min(1, held / 0.6)));
       charge = null;
     }
     window.addEventListener('pointerup', release, { passive: true });
